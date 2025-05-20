@@ -2,13 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package airport;
+package core.views;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import core.controllers.FlightController;
+import core.controllers.LocationController;
+import core.controllers.PassengerController;
+import core.controllers.PlaneController;
+import core.controllers.utils.Response;
+import core.models.Flight;
+import core.models.Location;
+import core.models.Passenger;
+import core.models.Plane;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
@@ -29,11 +39,8 @@ public class AirportFrame extends javax.swing.JFrame {
 
     public AirportFrame() {
         initComponents();
-
-        this.passengers = new ArrayList<>();
-        this.planes = new ArrayList<>();
-        this.locations = new ArrayList<>();
-        this.flights = new ArrayList<>();
+        loadJsons();
+        retrieveAllDataFromStorage();
 
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
@@ -44,7 +51,65 @@ public class AirportFrame extends javax.swing.JFrame {
         this.generateMinutes();
         this.blockPanels();
     }
-
+    
+    private void loadJsons(){
+        
+        Response response = PlaneController.loadPlanesFromJson("json/planes.json");
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        response = PassengerController.loadPassengersFromJson("json/passengers.json");
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        response = LocationController.loadLocationsFromJson("json/locations.json");
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        response = FlightController.loadFlightsFromJson("json/flights.json");
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        
+    }
+    private void retrieveAllDataFromStorage(){
+        Response response = PlaneController.getAllPlanes();
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.planes = (ArrayList<Plane>) response.getObject();
+        response = PassengerController.getAllPassengers();
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.passengers = (ArrayList<Passenger>) response.getObject();
+        response = LocationController.getAllLocations();
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.locations = (ArrayList<Location>) response.getObject();
+        response = FlightController.getAllFlights();
+        if(response.getStatus()>= 400){
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+        }
+        this.flights = (ArrayList<Flight>) response.getObject();
+    }
     private void blockPanels() {
         //9, 11
         for (int i = 1; i < jTabbedPane1.getTabCount(); i++) {

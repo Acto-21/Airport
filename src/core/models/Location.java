@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package airport;
+package core.models;
 
 /**
  *
  * @author edangulo
  */
-public class Location {
+public class Location implements Cloneable {
     
     private final String airportId;
     private String airportName;
@@ -48,6 +48,15 @@ public class Location {
 
     public double getAirportLongitude() {
         return airportLongitude;
+    }
+    
+    @Override
+    public Location clone(){
+        try {
+            return (Location) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
     
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package airport;
+package core.models;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
  *
  * @author edangulo
  */
-public class Passenger {
-    
+public class Passenger implements Cloneable {
+
     private final long id;
     private String firstname;
     private String lastname;
@@ -37,7 +37,7 @@ public class Passenger {
     public void addFlight(Flight flight) {
         this.flights.add(flight);
     }
-    
+
     public long getId() {
         return id;
     }
@@ -93,21 +93,29 @@ public class Passenger {
     public void setCountry(String country) {
         this.country = country;
     }
-    
+
     public String getFullname() {
         return firstname + " " + lastname;
     }
-    
+
     public String generateFullPhone() {
         return "+" + countryPhoneCode + " " + phone;
     }
-    
+
     public int calculateAge() {
         return Period.between(birthDate, LocalDate.now()).getYears();
     }
-    
+
     public int getNumFlights() {
         return flights.size();
     }
-    
+
+    @Override
+    public Passenger clone() {
+        try {
+            return (Passenger) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }  // Clonación superficial
+    }
 }

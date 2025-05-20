@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package airport;
+package core.models;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import java.util.ArrayList;
  *
  * @author edangulo
  */
-public class Flight {
-    
+public class Flight implements Cloneable {
+
     private final String id;
     private ArrayList<Passenger> passengers;
     private Plane plane;
@@ -24,7 +24,6 @@ public class Flight {
     private int minutesDurationArrival;
     private int hoursDurationScale;
     private int minutesDurationScale;
-    
 
     public Flight(String id, Plane plane, Location departureLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
         this.id = id;
@@ -35,7 +34,7 @@ public class Flight {
         this.departureDate = departureDate;
         this.hoursDurationArrival = hoursDurationArrival;
         this.minutesDurationArrival = minutesDurationArrival;
-        
+
         this.plane.addFlight(this);
     }
 
@@ -51,14 +50,14 @@ public class Flight {
         this.minutesDurationArrival = minutesDurationArrival;
         this.hoursDurationScale = hoursDurationScale;
         this.minutesDurationScale = minutesDurationScale;
-        
+
         this.plane.addFlight(this);
     }
-    
+
     public void addPassenger(Passenger passenger) {
         this.passengers.add(passenger);
     }
-    
+
     public String getId() {
         return id;
     }
@@ -102,17 +101,26 @@ public class Flight {
     public void setDepartureDate(LocalDateTime departureDate) {
         this.departureDate = departureDate;
     }
-    
+
     public LocalDateTime calculateArrivalDate() {
         return departureDate.plusHours(hoursDurationScale).plusHours(hoursDurationArrival).plusMinutes(minutesDurationScale).plusMinutes(minutesDurationArrival);
     }
-    
+
     public void delay(int hours, int minutes) {
         this.departureDate = this.departureDate.plusHours(hours).plusMinutes(minutes);
     }
-    
+
     public int getNumPassengers() {
         return passengers.size();
     }
-    
+
+    @Override
+    public Flight clone(){
+        try {
+            return (Flight) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package airport;
+package core.models;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author edangulo
  */
-public class Plane {
+public class Plane implements Cloneable{
     
     private final String id;
     private String brand;
@@ -60,4 +60,12 @@ public class Plane {
         return flights.size();
     }
     
+    @Override
+    public Plane clone(){
+        try {
+            return (Plane) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
