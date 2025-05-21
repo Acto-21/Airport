@@ -42,4 +42,47 @@ public class LocationController {
         }
         return new Response("Locations retrieved successfully.", Status.OK, copiaList);
     }
+    public static Response addLocation(String id, String name, String city, String country, double longitude, double latitude) {
+        
+        if (id == null || id.length() != 3) {
+            return new Response("El ID debe tener exactamente 3 caracteres.", Status.BAD_REQUEST);
+        }
+        for (int i = 0; i < id.length(); i++) {
+            char c = id.charAt(i);
+            if (c < 'A' || c > 'Z') {
+                return new Response("El ID solo puede contener letras mayúsculas.", Status.BAD_REQUEST);
+            }
+        }
+        
+        if (name == null || name.trim().isEmpty()) {
+            return new Response("El nombre no puede estar vacío.", Status.BAD_REQUEST);
+        }
+        if (city == null || city.trim().isEmpty()) {
+            return new Response("La ciudad no puede estar vacía.", Status.BAD_REQUEST);
+        }
+        if (country == null || country.trim().isEmpty()) {
+            return new Response("El país no puede estar vacío.", Status.BAD_REQUEST);
+        }
+        
+        if (latitude < -90 || latitude > 90) {
+            return new Response("La latitud debe estar entre -90 y 90.", Status.BAD_REQUEST);
+        }
+        
+        if (longitude < -180 || longitude > 180) {
+            return new Response("La longitud debe estar entre -180 y 180.", Status.BAD_REQUEST);
+        }
+        
+        LocationStorage storage = LocationStorage.getInstance();
+        for (Location loc : storage.getAll()) {
+            if (loc.getAirportId().equals(id)) {
+                return new Response("Ya existe una ubicación con ese ID.", Status.BAD_REQUEST);
+            }
+        }
+        
+        Location nueva = new Location(id, name, city, country, longitude, latitude);
+        storage.add(nueva);
+
+        return new Response("Ubicación agregada correctamente.", Status.CREATED);
+    }
+
 }

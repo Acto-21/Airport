@@ -50,6 +50,7 @@ public class Location implements Cloneable {
         return airportLongitude;
     }
     
+
     @Override
     public Location clone(){
         try {
