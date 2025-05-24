@@ -4,6 +4,7 @@
  */
 package core.models;
 
+import core.models.prototype.Prototype;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author edangulo
  */
-public class Flight implements Cloneable {
+public class Flight implements Prototype<Flight> {
 
     private final String id;
     private ArrayList<Passenger> passengers;
@@ -97,7 +98,11 @@ public class Flight implements Cloneable {
     public Plane getPlane() {
         return plane;
     }
-
+    
+    public ArrayList<Passenger> getPassengers() {
+        return passengers;
+    }
+    
     public void setDepartureDate(LocalDateTime departureDate) {
         this.departureDate = departureDate;
     }
@@ -106,21 +111,24 @@ public class Flight implements Cloneable {
         return departureDate.plusHours(hoursDurationScale).plusHours(hoursDurationArrival).plusMinutes(minutesDurationScale).plusMinutes(minutesDurationArrival);
     }
 
-    public void delay(int hours, int minutes) {
-        this.departureDate = this.departureDate.plusHours(hours).plusMinutes(minutes);
-    }
-
     public int getNumPassengers() {
         return passengers.size();
     }
 
+    public void setPassengers(ArrayList<Passenger> passengers) {
+        this.passengers = passengers;
+    }
+
     @Override
     public Flight clone(){
-        try {
-            return (Flight) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
+        Flight copy;
+        if (this.getScaleLocation() != null){
+            copy = new Flight(this.id,this.plane.clone(),this.departureLocation.clone(),this.scaleLocation.clone(),this.arrivalLocation.clone(),this.departureDate,this.hoursDurationArrival,this.minutesDurationArrival,this.hoursDurationScale,this.minutesDurationScale);
+        }else{
+            copy = new Flight(this.id,this.plane.clone(),this.departureLocation.clone(),this.arrivalLocation.clone(),this.departureDate,this.hoursDurationArrival,this.minutesDurationArrival);
         }
+        copy.setPassengers(this.passengers);
+        return copy;
     }
 
 }
