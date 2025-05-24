@@ -13,8 +13,17 @@ import core.models.Location;
 public class LocationFormatter implements Formatter<Location>{
 
     @Override
-    public Object[] format(Location object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String[] format(Location object) {
+        return new String[]{
+          object.getAirportId(),
+          object.getAirportName(),
+          object.getAirportCity(),
+          object.getAirportCountry()
+        };
     }
-    
+    /*
+    for (Location location : (ArrayList<Location>) response.getObject()) {
+            model.addRow(new Object[]{location.getAirportId(), location.getAirportName(), location.getAirportCity(), location.getAirportCountry()});
+        }
+    */
 }

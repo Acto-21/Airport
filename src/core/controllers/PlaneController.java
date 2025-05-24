@@ -10,6 +10,7 @@ import core.models.Plane;
 import core.models.storage.PlaneStorage;
 import core.models.storage.loaders.PlaneLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.formatters.PlaneFormatter;
 import java.util.ArrayList;
 
 /**
@@ -50,11 +51,11 @@ public class PlaneController {
             if (id.equals("")) {
                 return new Response("ID must be not empty", Status.BAD_REQUEST);
             }
-            if (id.length() != 6) {
-                return new Response("Invalid ID: must be exactly 6 characters long", Status.BAD_REQUEST);
+            if (id.length() != 7) {
+                return new Response("Invalid ID: must be exactly 6 characters (2 letters followed by 5 numbers)", Status.BAD_REQUEST);
             }
             String idLetters = id.substring(0, 2);
-            String idNumbers = id.substring(2, 6);
+            String idNumbers = id.substring(2, 7);
             try {
                 Integer.parseInt(idLetters);
                 return new Response("Invalid ID: first 2 digits must be capital letters", Status.BAD_REQUEST);
@@ -66,7 +67,7 @@ public class PlaneController {
             try {
                 Integer.parseInt(idNumbers);
             } catch (NumberFormatException e) {
-                return new Response("Invalid ID: last 4 digits must be numbers", Status.BAD_REQUEST);
+                return new Response("Invalid ID: last 5 digits must be numbers", Status.BAD_REQUEST);
             }
             if (brand.equals("")) {
                 return new Response("Brand must be not empty", Status.BAD_REQUEST);
@@ -91,5 +92,18 @@ public class PlaneController {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }
     }
-
+    
+    public static Response getPlanesWithFormat(){
+        try{
+            PlaneFormatter formatter = new PlaneFormatter();
+            ArrayList<Plane> planes = (ArrayList<Plane>) PlaneController.getAllPlanes().getObject();
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Plane plane: planes){
+                data.add(formatter.format(plane));
+            }
+            return new Response("Planes retrieved successfully.", Status.OK, data);
+        }catch (Exception e){
+            return new Response("Error retrieving planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+    }
 }

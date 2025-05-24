@@ -15,17 +15,17 @@ import java.time.LocalDateTime;
 public class FlightFormatter implements Formatter<Flight>{
 
     @Override
-    public Object[] format(Flight object) {
+    public String[] format(Flight object) {
         LocalDateTime arrivalDate = ArrivalCalculator.calculate(object);
-        return new Object[] {
+        return new String[] {
             object.getId(),
             object.getDepartureLocation().getAirportId(),
             object.getArrivalLocation().getAirportId(),
             object.getScaleLocation() == null ? "-" : object.getScaleLocation().getAirportId(),
-            object.getDepartureDate(),
-            arrivalDate,
+            object.getDepartureDate().toString(),
+            arrivalDate.toString(),
             object.getPlane().getId(),
-            object.getNumPassengers()
+            String.valueOf(object.getNumPassengers())
         };
     }
 

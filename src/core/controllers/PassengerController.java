@@ -6,10 +6,14 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.Flight;
 import core.models.Passenger;
+import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.PassengerManager;
+import core.services.formatters.PassengerFormatter;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,8 +24,6 @@ import java.util.ArrayList;
  */
 public class PassengerController {
 
-    private PassengerStorage passengers;
-    private PassengerLoader loader;
 
     public static Response loadPassengersFromJson(String path) {
         try {
@@ -253,6 +255,51 @@ public class PassengerController {
             return new Response("Passenger data updated successfully", Status.OK);
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static Response addToFlight(String passengerId, String flightId) {
+        Passenger passenger;
+        Flight flight;
+        PassengerStorage passengers = PassengerStorage.getInstance();
+        FlightStorage flights = FlightStorage.getInstance();
+        PassengerManager manager = new PassengerManager();
+        try {
+            if (passengerId.equals("")) {
+                return new Response("User must be selected", Status.BAD_REQUEST);
+            }
+            if (flightId.equals("Flight")) {
+                return new Response("Flight must be selected", Status.BAD_REQUEST);
+            }
+            passenger = passengers.get(passengerId);
+            flight = flights.get(flightId);
+            if(passenger == null){
+                return new Response("Passenger with selected ID not found", Status.BAD_REQUEST);
+            }
+            if(flight == null){
+                return new Response("Flight with selected ID not found", Status.BAD_REQUEST);
+            }
+            if(flight.getNumPassengers() == flight.getPlane().getMaxCapacity()){
+                return new Response("Flight is full. Cannot add more passengers.", Status.BAD_REQUEST);
+            }
+            manager.addPassenger(flight, passenger);
+            return new Response("Passengers added to flight", Status.OK);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static Response getPassengersWithFormat() {
+        try {
+            PassengerFormatter formatter = new PassengerFormatter();
+            ArrayList<Passenger> passengers = (ArrayList<Passenger>) PassengerController.getAllPassengers().getObject();
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Passenger passenger : passengers) {
+                data.add(formatter.format(passenger));
+            }
+            return new Response("Passengers retrieved successfully.", Status.OK, data);
+        } catch (Exception e) {
+            return new Response("Error retrieving passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
     }
 }

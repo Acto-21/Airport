@@ -228,8 +228,8 @@ public class FlightController {
     public static Response getFlightsWithFormat() {
         try {
             FlightFormatter formatter = new FlightFormatter();
-            ArrayList<Flight> flights = FlightStorage.getInstance().getAll();
-            ArrayList<Object[]> data = new ArrayList<>();
+            ArrayList<Flight> flights = (ArrayList<Flight>) FlightController.getAllFlights().getObject();
+            ArrayList<String[]> data = new ArrayList<>();
 
             for (Flight flight : flights) {
                 data.add(formatter.format(flight));

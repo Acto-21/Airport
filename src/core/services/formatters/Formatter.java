@@ -9,5 +9,5 @@ package core.services.formatters;
  * @author User
  */
 public interface Formatter<T> {
-    Object[] format(T object);
+    String[] format(T object);
 }

@@ -10,6 +10,7 @@ import core.models.Location;
 import core.models.storage.LocationStorage;
 import core.models.storage.loaders.LocationLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.formatters.LocationFormatter;
 import java.util.ArrayList;
 
 /**
@@ -101,5 +102,17 @@ public class LocationController {
     return new Response("Location added successfully.", Status.CREATED);
 }
 
-
+    public static Response getLocationsWithFormat(){
+        try{
+            LocationFormatter formatter = new LocationFormatter();
+            ArrayList<Location> locations = (ArrayList<Location>) LocationController.getAllLocations().getObject();
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Location location: locations){
+                data.add(formatter.format(location));
+            }
+            return new Response("Location retrieved successfully.", Status.OK, data);
+        }catch (Exception e){
+            return new Response("Error retrieving locations: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+    }
 }

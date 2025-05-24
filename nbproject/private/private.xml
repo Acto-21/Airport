@@ -3,24 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< Updated upstream
-            <file>file:/C:/Users/joelp/OneDrive/Escritorio/Airport/src/core/views/AirportFrame.java</file>
-            <file>file:/C:/Users/joelp/OneDrive/Escritorio/Airport/src/core/controllers/FlightController.java</file>
-            <file>file:/C:/Users/joelp/OneDrive/Escritorio/Airport/src/core/models/Flight.java</file>
-            <file>file:/C:/Users/joelp/OneDrive/Escritorio/Airport/src/core/models/storage/PlaneStorage.java</file>
-=======
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/prototype/Prototype.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/storage/PlaneStorage.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/views/AirportFrame.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/PassengerManager.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/FlightCoordinator.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/ArrivalCalculator.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/PassengerFormatter.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/storage/reader/LineFileReader.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/storage/loaders/LocationLoader.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/formatters/FlightFormatter.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/services/formatters/Formatter.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/storage/loaders/JsonDataLoader.java</file>
             <file>file:/C:/Users/User/Documents/NetBeansProjects/Airport/src/core/models/storage/loaders/FlightLoader.java</file>
->>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>

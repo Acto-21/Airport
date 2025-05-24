@@ -5,8 +5,7 @@
 package core.services.formatters;
 
 import core.models.Passenger;
-import java.time.LocalDate;
-import java.time.Period;
+import core.services.AgeCalculator;
 
 /**
  *
@@ -15,8 +14,24 @@ import java.time.Period;
 public class PassengerFormatter implements Formatter<Passenger>{
 
     @Override
-    public Object[] format(Passenger object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String[] format(Passenger object) {
+        int passengerAge = AgeCalculator.calculateAge(object.getBirthDate());
+        PhoneFormatter phoneFormatter = new PhoneFormatter();
+        String[] phone = phoneFormatter.format(object); 
+        return new String[]{
+            String.valueOf(object.getId()),
+            object.getFullname(),
+            object.getBirthDate().toString(),
+            String.valueOf(passengerAge),
+            phone[0],
+            object.getCountry(),
+            String.valueOf(object.getNumFlights())
+        };
     }
+    /*
+    for (Passenger passenger : (ArrayList<Passenger>) response.getObject()) {
+            model.addRow(new Object[]{passenger.getId(), passenger.getFullname(), passenger.getBirthDate(), passenger.calculateAge(), passenger.generateFullPhone(), passenger.getCountry(), passenger.getNumFlights()});
+        }
+    */
     
 }

@@ -13,8 +13,20 @@ import core.models.Plane;
 public class PlaneFormatter implements Formatter<Plane> {
 
     @Override
-    public Object[] format(Plane object) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String[] format(Plane object) {
+        return new String[] {
+            object.getId(),
+            object.getBrand(),
+            object.getModel(),
+            String.valueOf(object.getMaxCapacity()),
+            object.getAirline(),
+            String.valueOf(object.getNumFlights())
+        };
+        /*
+        for (Plane plane : (ArrayList<Plane>) response.getObject()) {
+            model.addRow(new Object[]{plane.getId(), plane.getBrand(), plane.getModel(), plane.getMaxCapacity(), plane.getAirline(), plane.getNumFlights()});
+        }
+        */
     }
 
 }
