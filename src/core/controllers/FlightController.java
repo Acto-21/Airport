@@ -21,6 +21,7 @@ import core.services.FlightCoordinator;
 import core.services.formatters.FlightFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,19 +45,30 @@ public class FlightController {
     }
 
     public static Response getAllFlights() {
-        ArrayList<Flight> originalList = FlightStorage.getInstance().getAll();
-        ArrayList<Flight> copiaList = new ArrayList<>();
+    List<Flight> originalList = FlightStorage.getInstance().getAll();
+    List<Flight> orderedList = new ArrayList<>();
 
-        for (Flight vuelo : originalList) {
-            try {
-                copiaList.add(vuelo.clone());
-            } catch (Exception e) {
-                return new Response("Error cloning flights: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+    for (Flight vuelo : originalList) {
+        try {
+            Flight copia = vuelo.clone();
+
+            boolean insertado = false;
+            for (int i = 0; i < orderedList.size(); i++) {
+                if (copia.getDepartureDate().isAfter(orderedList.get(i).getDepartureDate())) {
+                    orderedList.add(i, copia);
+                    insertado = true;
+                    break;
+                }
             }
+            if (!insertado) {
+                orderedList.add(copia);
+            }
+        } catch (Exception e) {
+            return new Response("Error cloning flights.", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
-
-        return new Response("Flights retrieved successfully.", Status.OK, copiaList);
     }
+    return new Response("Flights retrieved successfully.", Status.OK, orderedList);
+}
 
     public static Response addFlight(String id, String planeId, String departureId, String arrivalId, String year, String month, String day, String hour, String minutes, String hoursArrivalStr, String minutesArrivalStr,
             String scaleId, String hoursScaleStr, String minutesScaleStr) {
