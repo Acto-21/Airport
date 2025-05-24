@@ -150,4 +150,109 @@ public class PassengerController {
         }
 
     }
+    
+    public static Response updatePassenger(String id, String firstname, String lastname, String year, String month, String day, String countryPhoneCode, String phone, String country) {
+        PassengerStorage storage = PassengerStorage.getInstance();
+        long longId;
+        int intYear;
+        int intMonth;
+        int intDay;
+        int intPhoneCode;
+        long longPhone;
+        Passenger passenger;
+        LocalDate birthDate;
+        try {
+            if (id.equals("")) {
+                return new Response("User must be selected", Status.BAD_REQUEST);
+            }
+            try {
+                longId = Long.parseLong(id);
+                if (longId < 0) {
+                    return new Response("ID must be positive.", Status.BAD_REQUEST);
+                }
+                long maxId = 999999999999999L;
+                if (longId > maxId) {
+                    return new Response("ID cannot exceed 15 digit.", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("ID must be numeric", Status.BAD_REQUEST);
+            }
+            passenger = storage.get(id);
+            if (firstname.equals("")) {
+                return new Response("Firstname must be not empty", Status.BAD_REQUEST);
+            }
+
+            if (lastname.equals("")) {
+                return new Response("Lastname must be not empty", Status.BAD_REQUEST);
+            }
+            if (year.equals("")) {
+                return new Response("Year must be not empty", Status.BAD_REQUEST);
+            }
+            if (month.equals("Month")) {
+                return new Response("You must choose a month before proceeding.", Status.BAD_REQUEST);
+            }
+            try {
+                intYear = Integer.parseInt(year);
+                int currentYear = LocalDate.now().getYear();
+                if (intYear < 1900 || intYear > currentYear) {
+                    return new Response("Please enter a valid birth year between 1900 and " + currentYear + ".", Status.BAD_REQUEST);
+                }
+
+            } catch (NumberFormatException e) {
+                return new Response("Birth year must be a number", Status.BAD_REQUEST);
+            }
+            intMonth = Integer.parseInt(month);
+            if (day.equals("Day")) {
+                return new Response("You must choose a day before proceeding.", Status.BAD_REQUEST);
+            }
+            intDay = Integer.parseInt(day);
+            try {
+                birthDate = LocalDate.of(intYear, intMonth, intDay);
+            } catch (DateTimeException e) {
+                return new Response("Birth date is invalid or does not exist.", Status.BAD_REQUEST);
+            }
+            if (countryPhoneCode.equals("")) {
+                return new Response("Phone Code must be not empty", Status.BAD_REQUEST);
+            }
+            try {
+                intPhoneCode = Integer.parseInt(countryPhoneCode);
+                if (intPhoneCode < 0) {
+                    return new Response("Phone code must be positive.", Status.BAD_REQUEST);
+                }
+                int maxPhoneCode = 999;
+                if (intPhoneCode > maxPhoneCode) {
+                    return new Response("Phone code cannot exceed 3 digit.", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Phone code must be numeric", Status.BAD_REQUEST);
+            }
+            if (phone.equals("")) {
+                return new Response("Phone must be not empty", Status.BAD_REQUEST);
+            }
+            try {
+                longPhone = Long.parseLong(phone);
+                if (longPhone < 0) {
+                    return new Response("Phone must be positive.", Status.BAD_REQUEST);
+                }
+                long maxPhone = 99999999999L;
+                if (longPhone > maxPhone) {
+                    return new Response("Phone cannot exceed 11 digit.", Status.BAD_REQUEST);
+                }
+            } catch (NumberFormatException ex) {
+                return new Response("Phone must be numeric", Status.BAD_REQUEST);
+            }
+            if (country.equals("")) {
+                return new Response("Country must be not empty", Status.BAD_REQUEST);
+            }
+            passenger.setFirstname(firstname);
+            passenger.setLastname(lastname);
+            passenger.setBirthDate(birthDate);
+            passenger.setCountryPhoneCode(intPhoneCode);
+            passenger.setPhone(longPhone);
+            passenger.setCountry(country);
+            return new Response("Passenger data updated successfully", Status.OK);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
