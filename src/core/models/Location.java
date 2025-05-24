@@ -4,11 +4,13 @@
  */
 package core.models;
 
+import core.models.prototype.Prototype;
+
 /**
  *
  * @author edangulo
  */
-public class Location implements Cloneable {
+public class Location implements Prototype<Location> {
     
     private final String airportId;
     private String airportName;
@@ -53,11 +55,8 @@ public class Location implements Cloneable {
 
     @Override
     public Location clone(){
-        try {
-            return (Location) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        Location copy = new Location(this.airportId,this.airportName,this.airportCity,this.airportCountry,this.airportLatitude,this.airportLongitude);
+        return copy;
     }
     
 }

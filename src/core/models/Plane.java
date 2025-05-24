@@ -4,13 +4,14 @@
  */
 package core.models;
 
+import core.models.prototype.Prototype;
 import java.util.ArrayList;
 
 /**
  *
  * @author edangulo
  */
-public class Plane implements Cloneable{
+public class Plane implements Prototype<Plane>{
     
     private final String id;
     private String brand;
@@ -56,16 +57,23 @@ public class Plane implements Cloneable{
         return flights;
     }
     
+    public void setFlights(ArrayList<Flight> flights) {
+        this.flights = flights;
+    }
+    
     public int getNumFlights() {
         return flights.size();
     }
+
+    
     
     @Override
     public Plane clone(){
-        try {
-            return (Plane) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+        
+        Plane copy = new Plane(this.id,this.brand,this.model,this.maxCapacity,this.airline);
+        copy.setFlights(this.flights);
+        
+        return copy;
+
     }
 }

@@ -4,6 +4,7 @@
  */
 package core.models;
 
+import core.models.prototype.Prototype;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author edangulo
  */
-public class Passenger implements Cloneable {
+public class Passenger implements Prototype<Passenger> {
 
     private final long id;
     private String firstname;
@@ -110,12 +111,14 @@ public class Passenger implements Cloneable {
         return flights.size();
     }
 
+    public void setFlights(ArrayList<Flight> flights) {
+        this.flights = flights;
+    }
+
     @Override
     public Passenger clone() {
-        try {
-            return (Passenger) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }  // Clonación superficial
+        Passenger copy = new Passenger(this.id, this.firstname, this.lastname, this.birthDate, this.countryPhoneCode, this.phone, this.country);
+        copy.setFlights(this.flights);
+        return copy;
     }
 }

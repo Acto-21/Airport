@@ -9,7 +9,7 @@ import core.controllers.utils.Status;
 import core.models.Passenger;
 import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
-import core.models.storage.reader.JsonFileReader;
+import core.models.storage.reader.LineFileReader;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class PassengerController {
         try {
             PassengerStorage passengers = PassengerStorage.getInstance();
             PassengerLoader loader = new PassengerLoader(passengers);
-            String jsonPassengers = JsonFileReader.readFile(path);
+            String jsonPassengers = LineFileReader.readFile(path);
             loader.loadFromFile(jsonPassengers);
             return new Response("Passengers loaded successfully", Status.OK);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class PassengerController {
         ArrayList<Passenger> copiaList = new ArrayList<>();
         for (Passenger pasajero : originalList) {
             try {
-                copiaList.add((Passenger) pasajero.clone());
+                copiaList.add(pasajero.clone());
             } catch (Exception e) {
                 return new Response("Error cloning passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
             }
@@ -91,15 +91,15 @@ public class PassengerController {
                 return new Response("You must choose a month before proceeding.", Status.BAD_REQUEST);
             }
             try {
-                    intYear = Integer.parseInt(year);
-                    int currentYear = LocalDate.now().getYear();
-                    if (intYear < 1900 || intYear > currentYear) {
-                        return new Response("Please enter a valid birth year between 1900 and " + currentYear + ".", Status.BAD_REQUEST);
-                    }
-                    
-                } catch (NumberFormatException e) {
-                    return new Response("Birth year must be a number", Status.BAD_REQUEST);
+                intYear = Integer.parseInt(year);
+                int currentYear = LocalDate.now().getYear();
+                if (intYear < 1900 || intYear > currentYear) {
+                    return new Response("Please enter a valid birth year between 1900 and " + currentYear + ".", Status.BAD_REQUEST);
                 }
+
+            } catch (NumberFormatException e) {
+                return new Response("Birth year must be a number", Status.BAD_REQUEST);
+            }
             intMonth = Integer.parseInt(month);
             if (day.equals("Day")) {
                 return new Response("You must choose a day before proceeding.", Status.BAD_REQUEST);
@@ -150,7 +150,7 @@ public class PassengerController {
         }
 
     }
-    
+
     public static Response updatePassenger(String id, String firstname, String lastname, String year, String month, String day, String countryPhoneCode, String phone, String country) {
         PassengerStorage storage = PassengerStorage.getInstance();
         long longId;
