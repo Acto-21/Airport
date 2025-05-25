@@ -284,7 +284,7 @@ public class AirportFrame extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        refreshPassengerFlights = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -1107,11 +1107,11 @@ public class AirportFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jButton2.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton2.setText("Refresh");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        refreshPassengerFlights.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        refreshPassengerFlights.setText("Refresh");
+        refreshPassengerFlights.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                refreshPassengerFlightsActionPerformed(evt);
             }
         });
 
@@ -1125,7 +1125,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addContainerGap(291, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(refreshPassengerFlights)
                 .addGap(527, 527, 527))
         );
         jPanel7Layout.setVerticalGroup(
@@ -1134,7 +1134,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGap(61, 61, 61)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(refreshPassengerFlights)
                 .addContainerGap())
         );
 
@@ -1722,25 +1722,24 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void refreshPassengerFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshPassengerFlightsActionPerformed
         // TODO add your handling code here:
-        long passengerId = Long.parseLong(userSelect.getItemAt(userSelect.getSelectedIndex()));
-
-        Passenger passenger = null;
-        Response response = PassengerController.getAllPassengers();
-        for (Passenger p : (ArrayList<Passenger>) response.getObject()) {
-            if (p.getId() == passengerId) {
-                passenger = p;
-            }
-        }
-
-        ArrayList<Flight> flights = passenger.getFlights();
+        
+        String passengerId = userSelect.getItemAt(userSelect.getSelectedIndex());
+        Response response = PassengerController.showPassengerFlights(passengerId);
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        for (Flight flight : flights) {
-            model.addRow(new Object[]{flight.getId(), flight.getDepartureDate(), flight.calculateArrivalDate()});
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
+            for (Object[] data : (ArrayList<String[]>) response.getObject()) {
+                model.addRow(data);
+            }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_refreshPassengerFlightsActionPerformed
 
     private void refreshPassengersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshPassengersActionPerformed
         // TODO add your handling code here:
@@ -1894,7 +1893,6 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JTextField flightidtext;
     private javax.swing.JComboBox<String> iDFlightSelect;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox8;
@@ -1997,6 +1995,7 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> planeSelect;
     private javax.swing.JButton refreshFlights;
     private javax.swing.JButton refreshLocations;
+    private javax.swing.JButton refreshPassengerFlights;
     private javax.swing.JButton refreshPassengers;
     private javax.swing.JButton refreshPlanes;
     private javax.swing.JComboBox<String> scaleLocationSelect;

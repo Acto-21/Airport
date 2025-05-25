@@ -13,6 +13,7 @@ import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
 import core.models.storage.reader.LineFileReader;
 import core.services.PassengerManager;
+import core.services.formatters.PassengerFlightFormatter;
 import core.services.formatters.PassengerFormatter;
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -289,6 +290,30 @@ public class PassengerController {
         }
     }
 
+    public static Response showPassengerFlights(String passengerId){
+        try {
+            PassengerFlightFormatter formatter = new PassengerFlightFormatter();
+            Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+            if (passenger == null){
+                return new Response("Passenger not found in Database", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+            }
+            ArrayList<Flight> flights = passenger.getFlights();
+            if (flights.isEmpty()){
+                return new Response("Passenger has no flights", Status.OK,  new ArrayList<>());
+            }
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Flight flight : flights) {
+                data.add(formatter.format(flight));
+                for (int i = 0; i < 3; i++) {
+                    System.out.println(formatter.format(flight)[i]);
+                }
+            }
+            return new Response("Passenger flights retrieved successfully.", Status.OK, data);
+        } catch (Exception e) {
+            return new Response("Error retrieving passenger flights: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+    }
+    
     public static Response getPassengersWithFormat() {
         try {
             PassengerFormatter formatter = new PassengerFormatter();
