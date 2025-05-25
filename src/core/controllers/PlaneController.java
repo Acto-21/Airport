@@ -69,6 +69,10 @@ public class PlaneController {
             } catch (NumberFormatException e) {
                 return new Response("Invalid ID: last 5 digits must be numbers", Status.BAD_REQUEST);
             }
+            if(storage.get(id) != null){
+                return new Response("A plane already exists with that ID.", Status.BAD_REQUEST);
+            }
+            
             if (brand.equals("")) {
                 return new Response("Brand must be not empty", Status.BAD_REQUEST);
             }

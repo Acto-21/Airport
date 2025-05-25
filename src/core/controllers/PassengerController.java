@@ -247,12 +247,10 @@ public class PassengerController {
             if (country.equals("")) {
                 return new Response("Country must be not empty", Status.BAD_REQUEST);
             }
-            passenger.setFirstname(firstname);
-            passenger.setLastname(lastname);
-            passenger.setBirthDate(birthDate);
-            passenger.setCountryPhoneCode(intPhoneCode);
-            passenger.setPhone(longPhone);
-            passenger.setCountry(country);
+            Passenger pasajeroActualizado = new Passenger(longId,firstname,lastname,birthDate,intPhoneCode,longPhone,country);
+            if(!storage.update(pasajeroActualizado)){
+                return new Response("Passenger not found in dataBase", Status.INTERNAL_SERVER_ERROR);
+            }
             return new Response("Passenger data updated successfully", Status.OK);
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);

@@ -4,7 +4,7 @@
  */
 package core.models;
 
-import core.models.prototype.Prototype;
+import core.patterns.prototype.Prototype;
 import java.util.ArrayList;
 
 /**

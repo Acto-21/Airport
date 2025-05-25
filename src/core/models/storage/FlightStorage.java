@@ -5,13 +5,14 @@
 package core.models.storage;
 
 import core.models.Flight;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
-public class FlightStorage implements Storage<Flight> {
+public class FlightStorage extends Observable implements Storage<Flight> {
 
     private static FlightStorage instance;
 
@@ -36,7 +37,19 @@ public class FlightStorage implements Storage<Flight> {
             }
         }
         this.flights.add(item);
+        notifyAll(1);
         return true;
+    }
+    
+    public boolean update(Flight item) {
+        for (int i = 0; i < this.flights.size(); i++) {
+            if (this.flights.get(i).getId() == item.getId()) {
+                this.flights.set(i, item);
+                notifyAll(2);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

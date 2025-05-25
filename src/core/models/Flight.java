@@ -4,7 +4,7 @@
  */
 package core.models;
 
-import core.models.prototype.Prototype;
+import core.patterns.prototype.Prototype;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -107,9 +107,6 @@ public class Flight implements Prototype<Flight> {
         this.departureDate = departureDate;
     }
 
-    public LocalDateTime calculateArrivalDate() {
-        return departureDate.plusHours(hoursDurationScale).plusHours(hoursDurationArrival).plusMinutes(minutesDurationScale).plusMinutes(minutesDurationArrival);
-    }
 
     public int getNumPassengers() {
         return passengers.size();

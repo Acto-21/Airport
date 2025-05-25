@@ -5,29 +5,30 @@
 package core.models.storage;
 
 import core.models.Passenger;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
-public class PassengerStorage implements Storage<Passenger>{
+public class PassengerStorage extends Observable implements Storage<Passenger> {
 
     private static PassengerStorage instance;
-    
+
     private ArrayList<Passenger> passengers;
-    
+
     private PassengerStorage() {
         this.passengers = new ArrayList<>();
     }
-    
+
     public static PassengerStorage getInstance() {
         if (instance == null) {
             instance = new PassengerStorage();
         }
         return instance;
     }
-    
+
     @Override
     public boolean add(Passenger item) {
         for (Passenger p : this.passengers) {
@@ -36,22 +37,34 @@ public class PassengerStorage implements Storage<Passenger>{
             }
         }
         this.passengers.add(item);
+        notifyAll(1);
         return true;
+    }
+
+    public boolean update(Passenger item) {
+        for (int i = 0; i < this.passengers.size(); i++) {
+            if (this.passengers.get(i).getId() == item.getId()) {
+                this.passengers.set(i, item);
+                notifyAll(2);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public Passenger get(String id) {
         Long idLong = Long.parseLong(id);
-        for (Passenger passenger: this.passengers) {
+        for (Passenger passenger : this.passengers) {
             if (passenger.getId() == idLong) {
                 return passenger;
             }
         }
         return null;
     }
-    
+
     public ArrayList<Passenger> getAll() {
         return this.passengers;
-    }   
-    
+    }
+
 }
