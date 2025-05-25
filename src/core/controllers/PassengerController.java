@@ -6,10 +6,16 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.Flight;
 import core.models.Passenger;
+import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
-import core.models.storage.reader.JsonFileReader;
+import core.models.storage.reader.LineFileReader;
+import core.services.OrderedPassengers;
+import core.services.PassengerManager;
+import core.services.formatters.PassengerFlightFormatter;
+import core.services.formatters.PassengerFormatter;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,14 +26,12 @@ import java.util.ArrayList;
  */
 public class PassengerController {
 
-    private PassengerStorage passengers;
-    private PassengerLoader loader;
 
     public static Response loadPassengersFromJson(String path) {
         try {
             PassengerStorage passengers = PassengerStorage.getInstance();
             PassengerLoader loader = new PassengerLoader(passengers);
-            String jsonPassengers = JsonFileReader.readFile(path);
+            String jsonPassengers = LineFileReader.readFile(path);
             loader.loadFromFile(jsonPassengers);
             return new Response("Passengers loaded successfully", Status.OK);
         } catch (Exception e) {
@@ -36,15 +40,16 @@ public class PassengerController {
     }
 
     public static Response getAllPassengers() {
-        ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
+        
         ArrayList<Passenger> copiaList = new ArrayList<>();
-        for (Passenger pasajero : originalList) {
+        
             try {
-                copiaList.add((Passenger) pasajero.clone());
+                ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
+                copiaList = OrderedPassengers.orderPassengers(originalList) ;
             } catch (Exception e) {
                 return new Response("Error cloning passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
             }
-        }
+        
         return new Response("Passengers retrieved successfully.", Status.OK, copiaList);
     }
 
@@ -91,15 +96,15 @@ public class PassengerController {
                 return new Response("You must choose a month before proceeding.", Status.BAD_REQUEST);
             }
             try {
-                    intYear = Integer.parseInt(year);
-                    int currentYear = LocalDate.now().getYear();
-                    if (intYear < 1900 || intYear > currentYear) {
-                        return new Response("Please enter a valid birth year between 1900 and " + currentYear + ".", Status.BAD_REQUEST);
-                    }
-                    
-                } catch (NumberFormatException e) {
-                    return new Response("Birth year must be a number", Status.BAD_REQUEST);
+                intYear = Integer.parseInt(year);
+                int currentYear = LocalDate.now().getYear();
+                if (intYear < 1900 || intYear > currentYear) {
+                    return new Response("Please enter a valid birth year between 1900 and " + currentYear + ".", Status.BAD_REQUEST);
                 }
+
+            } catch (NumberFormatException e) {
+                return new Response("Birth year must be a number", Status.BAD_REQUEST);
+            }
             intMonth = Integer.parseInt(month);
             if (day.equals("Day")) {
                 return new Response("You must choose a day before proceeding.", Status.BAD_REQUEST);
@@ -150,7 +155,7 @@ public class PassengerController {
         }
 
     }
-    
+
     public static Response updatePassenger(String id, String firstname, String lastname, String year, String month, String day, String countryPhoneCode, String phone, String country) {
         PassengerStorage storage = PassengerStorage.getInstance();
         long longId;
@@ -253,6 +258,75 @@ public class PassengerController {
             return new Response("Passenger data updated successfully", Status.OK);
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static Response addToFlight(String passengerId, String flightId) {
+        Passenger passenger;
+        Flight flight;
+        PassengerStorage passengers = PassengerStorage.getInstance();
+        FlightStorage flights = FlightStorage.getInstance();
+        PassengerManager manager = new PassengerManager();
+        try {
+            if (passengerId.equals("")) {
+                return new Response("User must be selected", Status.BAD_REQUEST);
+            }
+            if (flightId.equals("Flight")) {
+                return new Response("Flight must be selected", Status.BAD_REQUEST);
+            }
+            passenger = passengers.get(passengerId);
+            flight = flights.get(flightId);
+            if(passenger == null){
+                return new Response("Passenger with selected ID not found", Status.BAD_REQUEST);
+            }
+            if(flight == null){
+                return new Response("Flight with selected ID not found", Status.BAD_REQUEST);
+            }
+            if(flight.getNumPassengers() == flight.getPlane().getMaxCapacity()){
+                return new Response("Flight is full. Cannot add more passengers.", Status.BAD_REQUEST);
+            }
+            manager.addPassenger(flight, passenger);
+            return new Response("Passengers added to flight", Status.OK);
+        } catch (Exception e) {
+            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public static Response showPassengerFlights(String passengerId){
+        try {
+            PassengerFlightFormatter formatter = new PassengerFlightFormatter();
+            Passenger passenger = PassengerStorage.getInstance().get(passengerId);
+            if (passenger == null){
+                return new Response("Passenger not found in Database", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+            }
+            ArrayList<Flight> flights = passenger.getFlights();
+            if (flights.isEmpty()){
+                return new Response("Passenger has no flights", Status.OK,  new ArrayList<>());
+            }
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Flight flight : flights) {
+                data.add(formatter.format(flight));
+                for (int i = 0; i < 3; i++) {
+                    System.out.println(formatter.format(flight)[i]);
+                }
+            }
+            return new Response("Passenger flights retrieved successfully.", Status.OK, data);
+        } catch (Exception e) {
+            return new Response("Error retrieving passenger flights: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+    }
+    
+    public static Response getPassengersWithFormat() {
+        try {
+            PassengerFormatter formatter = new PassengerFormatter();
+            ArrayList<Passenger> passengers = (ArrayList<Passenger>) PassengerController.getAllPassengers().getObject();
+            ArrayList<String[]> data = new ArrayList<>();
+            for (Passenger passenger : passengers) {
+                data.add(formatter.format(passenger));
+            }
+            return new Response("Passengers retrieved successfully.", Status.OK, data);
+        } catch (Exception e) {
+            return new Response("Error retrieving passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
     }
 }
