@@ -12,10 +12,10 @@ import java.io.IOException;
  *
  * @author User
  */
-public class LineFileReader {
+public class LineFileReader implements Reader {
 
-    
-    public static String readFile(String path) throws IOException {
+    @Override
+    public Object read(String path) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             StringBuilder sb = new StringBuilder();
             String linea;
@@ -24,9 +24,7 @@ public class LineFileReader {
             }
             return sb.toString();
         }
+
     }
 
-    public LineFileReader() {
-    }
-    
 }

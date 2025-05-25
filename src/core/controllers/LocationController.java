@@ -8,8 +8,9 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Location;
 import core.models.storage.LocationStorage;
-import core.models.storage.loaders.LocationLoader;
+import core.models.storage.loaders.LocationJsonLoader;
 import core.models.storage.reader.LineFileReader;
+import core.models.storage.reader.Reader;
 import core.services.LocationOrderer;
 import core.services.formatters.LocationFormatter;
 import java.util.ArrayList;
@@ -23,8 +24,9 @@ public class LocationController {
     public static Response loadLocationsFromJson(String path) {
         try {
             LocationStorage locations = LocationStorage.getInstance();
-            LocationLoader loader = new LocationLoader(locations);
-            String jsonLocations = LineFileReader.readFile(path);
+            LocationJsonLoader loader = new LocationJsonLoader(locations);
+            Reader reader = new LineFileReader();
+            String jsonLocations = (String) reader.read(path);
             loader.loadFromFile(jsonLocations);
             return new Response("Locations loaded successfully", Status.OK);
         } catch (Exception e) {

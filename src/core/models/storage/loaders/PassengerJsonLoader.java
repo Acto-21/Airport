@@ -14,18 +14,18 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class PassengerLoader implements JsonDataLoader<Passenger>{
+public class PassengerJsonLoader implements DataLoader<Passenger>{
 
     private final PassengerStorage passengers;
 
-    public PassengerLoader(PassengerStorage passengers) {
+    public PassengerJsonLoader(PassengerStorage passengers) {
         this.passengers = passengers;
     }
     
     
     @Override
-    public void loadFromFile(String jsonStr) {
-        JSONArray jsonArray = new JSONArray(jsonStr);
+    public void loadFromFile(Object data) {
+        JSONArray jsonArray = new JSONArray((String)data);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject passenger = jsonArray.getJSONObject(i);
             

@@ -13,17 +13,17 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class PlaneLoader implements JsonDataLoader<Plane>{
+public class PlaneJsonLoader implements DataLoader<Plane>{
     
     private final PlaneStorage planes;
 
-    public PlaneLoader(PlaneStorage planes) {
+    public PlaneJsonLoader(PlaneStorage planes) {
         this.planes = planes;
     }
     
     @Override
-    public void loadFromFile(String jsonStr) {
-        JSONArray jsonArray = new JSONArray(jsonStr);
+    public void loadFromFile(Object data) {
+        JSONArray jsonArray = new JSONArray((String)data);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject plane = jsonArray.getJSONObject(i);
             

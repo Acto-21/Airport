@@ -12,16 +12,16 @@ import core.models.Plane;
 import core.models.storage.FlightStorage;
 import core.models.storage.LocationStorage;
 import core.models.storage.PlaneStorage;
-import core.models.storage.loaders.FlightLoader;
+import core.models.storage.loaders.FlightJSonLoader;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import core.models.storage.reader.LineFileReader;
+import core.models.storage.reader.Reader;
 import core.services.FlightCoordinator;
 import core.services.FlightOrderer;
 import core.services.formatters.FlightFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -35,8 +35,9 @@ public class FlightController {
             FlightStorage flights = FlightStorage.getInstance();
             PlaneStorage planes = PlaneStorage.getInstance();
             LocationStorage locations = LocationStorage.getInstance();
-            FlightLoader loader = new FlightLoader(flights, planes, locations);
-            String jsonFlights = LineFileReader.readFile(path);
+            FlightJSonLoader loader = new FlightJSonLoader(flights, planes, locations);
+            Reader reader = new LineFileReader();
+            String jsonFlights = (String) reader.read(path);
             loader.loadFromFile(jsonFlights);
             return new Response("Flights loaded successfully", Status.OK);
         } catch (Exception e) {
@@ -97,7 +98,9 @@ public class FlightController {
         if (arrival == null) {
             return new Response("The arrival location does not exist.", Status.BAD_REQUEST);
         }
-
+        if(departure == arrival){
+            return new Response("The departure and arrival location cannot be the same", Status.BAD_REQUEST);
+        }
         LocalDateTime departureLocalDate;
         int intYear, intMonth, intDay;
         if (year.equals("")) {
@@ -193,7 +196,12 @@ public class FlightController {
                 return new Response("There can be no scale time if there is no scale location.", Status.BAD_REQUEST);
             }
         }
-
+        if(departure == scale){
+            return new Response("The departure and scale location cannot be the same", Status.BAD_REQUEST);
+        }
+        if(arrival == scale){
+            return new Response("The arrival and scale location cannot be the same", Status.BAD_REQUEST);
+        }
         Flight flight;
         if (hayEscala) {
             flight = new Flight(id, plane, departure, scale, arrival, departureLocalDate, hoursArrival, minutesArrival, hoursScale, minutesScale);

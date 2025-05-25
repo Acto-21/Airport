@@ -5,6 +5,7 @@
 package core.services;
 
 import core.models.Flight;
+import core.models.storage.FlightStorage;
 
 /**
  *
@@ -13,7 +14,11 @@ import core.models.Flight;
 public class FlightCoordinator {
 
     public void delay(Flight flight, int hours, int minutes) {
+        
+        FlightStorage flightStorage = FlightStorage.getInstance();
         flight.setDepartureDate(flight.getDepartureDate().plusHours(hours).plusMinutes(minutes));
+        flightStorage.update(flight);
+        
     }
     
 }

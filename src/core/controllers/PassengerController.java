@@ -10,8 +10,9 @@ import core.models.Flight;
 import core.models.Passenger;
 import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
-import core.models.storage.loaders.PassengerLoader;
+import core.models.storage.loaders.PassengerJsonLoader;
 import core.models.storage.reader.LineFileReader;
+import core.models.storage.reader.Reader;
 import core.patterns.observer.UserManager;
 import core.services.PassengerOrder;
 import core.services.PassengerManager;
@@ -30,8 +31,9 @@ public class PassengerController {
     public static Response loadPassengersFromJson(String path) {
         try {
             PassengerStorage passengers = PassengerStorage.getInstance();
-            PassengerLoader loader = new PassengerLoader(passengers);
-            String jsonPassengers = LineFileReader.readFile(path);
+            PassengerJsonLoader loader = new PassengerJsonLoader(passengers);
+            Reader reader = new LineFileReader();
+            String jsonPassengers = (String) reader.read(path);
             loader.loadFromFile(jsonPassengers);
             return new Response("Passengers loaded successfully", Status.OK);
         } catch (Exception e) {

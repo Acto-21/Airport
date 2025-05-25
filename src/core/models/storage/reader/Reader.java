@@ -2,14 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package core.models.storage.loaders;
+package core.models.storage.reader;
 
-import java.util.List;
+import java.io.IOException;
 
 /**
  *
  * @author User
  */
-public interface JsonDataLoader<T> {
-    void loadFromFile(String jsonStr);
+public interface Reader {
+
+    Object read(String path) throws IOException;
+    
 }

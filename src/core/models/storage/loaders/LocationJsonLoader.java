@@ -13,17 +13,17 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class LocationLoader implements JsonDataLoader<Location>  {
+public class LocationJsonLoader implements DataLoader<Location>  {
     
     private final LocationStorage locations;
 
-    public LocationLoader(LocationStorage locations) {
+    public LocationJsonLoader(LocationStorage locations) {
         this.locations = locations;
     }
     
     @Override
-    public void loadFromFile(String jsonStr) {
-        JSONArray jsonArray = new JSONArray(jsonStr);
+    public void loadFromFile(Object data) {
+        JSONArray jsonArray = new JSONArray((String)data);
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject location = jsonArray.getJSONObject(i);
             

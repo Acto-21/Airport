@@ -8,8 +8,9 @@ import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Plane;
 import core.models.storage.PlaneStorage;
-import core.models.storage.loaders.PlaneLoader;
+import core.models.storage.loaders.PlaneJsonLoader;
 import core.models.storage.reader.LineFileReader;
+import core.models.storage.reader.Reader;
 import core.services.PlaneOrderer;
 import core.services.formatters.PlaneFormatter;
 import java.util.ArrayList;
@@ -23,8 +24,9 @@ public class PlaneController {
     public static Response loadPlanesFromJson(String path) {
         try {
             PlaneStorage planes = PlaneStorage.getInstance();
-            PlaneLoader loader = new PlaneLoader(planes);
-            String jsonPlanes = LineFileReader.readFile(path);
+            PlaneJsonLoader loader = new PlaneJsonLoader(planes);
+            Reader reader = new LineFileReader();
+            String jsonPlanes = (String) reader.read(path);
             loader.loadFromFile(jsonPlanes);
             return new Response("Planes loaded successfully", Status.OK);
         } catch (Exception e) {

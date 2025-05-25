@@ -40,8 +40,8 @@ public class LocationComboBoxObserver extends Observer {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
             comboBox1.addItem("Location");
-            comboBox1.addItem("Location");
-            comboBox1.addItem("Location");
+            comboBox2.addItem("Location");
+            comboBox3.addItem("Location");
             for (Location f : (ArrayList<Location>) response.getObject()) {
                 comboBox1.addItem(f.getAirportId());
                 comboBox2.addItem(f.getAirportId());

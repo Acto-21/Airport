@@ -18,22 +18,22 @@ import org.json.JSONObject;
  *
  * @author User
  */
-public class FlightLoader implements JsonDataLoader<Flight> {
+public class FlightJSonLoader implements DataLoader<Flight> {
 
     private final FlightStorage flights;
     private final PlaneStorage planes;
     private final LocationStorage locations;
 
-    public FlightLoader(FlightStorage flights, PlaneStorage planes, LocationStorage locations) {
+    public FlightJSonLoader(FlightStorage flights, PlaneStorage planes, LocationStorage locations) {
         this.flights = flights;
         this.planes = planes;
         this.locations = locations;
     }
 
     @Override
-    public void loadFromFile(String jsonStr) {
+    public void loadFromFile(Object data) {
 
-        JSONArray jsonArray = new JSONArray(jsonStr);
+        JSONArray jsonArray = new JSONArray((String)data);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject flight = jsonArray.getJSONObject(i);
 
