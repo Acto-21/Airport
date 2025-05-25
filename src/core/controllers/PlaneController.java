@@ -10,7 +10,7 @@ import core.models.Plane;
 import core.models.storage.PlaneStorage;
 import core.models.storage.loaders.PlaneLoader;
 import core.models.storage.reader.LineFileReader;
-import core.services.OrderedPlanes;
+import core.services.PlaneOrderer;
 import core.services.formatters.PlaneFormatter;
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class PlaneController {
         
         try {
             ArrayList<Plane> originalList = PlaneStorage.getInstance().getAll();
-            copiaList = OrderedPlanes.orderPlanes(originalList);
+            copiaList = PlaneOrderer.orderPlanes(originalList);
         } catch (Exception e) {
             return new Response("Error cloning planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }

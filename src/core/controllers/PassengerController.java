@@ -12,7 +12,8 @@ import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
 import core.models.storage.reader.LineFileReader;
-import core.services.OrderedPassengers;
+import core.patterns.observer.UserManager;
+import core.services.PassengerOrder;
 import core.services.PassengerManager;
 import core.services.formatters.PassengerFlightFormatter;
 import core.services.formatters.PassengerFormatter;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
  * @author User
  */
 public class PassengerController {
-
 
     public static Response loadPassengersFromJson(String path) {
         try {
@@ -40,16 +40,16 @@ public class PassengerController {
     }
 
     public static Response getAllPassengers() {
-        
+
         ArrayList<Passenger> copiaList = new ArrayList<>();
-        
-            try {
-                ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
-                copiaList = OrderedPassengers.orderPassengers(originalList) ;
-            } catch (Exception e) {
-                return new Response("Error cloning passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
-            }
-        
+
+        try {
+            ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
+            copiaList = PassengerOrder.order(originalList);
+        } catch (Exception e) {
+            return new Response("Error cloning passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+
         return new Response("Passengers retrieved successfully.", Status.OK, copiaList);
     }
 
@@ -249,8 +249,8 @@ public class PassengerController {
             if (country.equals("")) {
                 return new Response("Country must be not empty", Status.BAD_REQUEST);
             }
-            Passenger pasajeroActualizado = new Passenger(longId,firstname,lastname,birthDate,intPhoneCode,longPhone,country);
-            if(!storage.update(pasajeroActualizado)){
+            Passenger pasajeroActualizado = new Passenger(longId, firstname, lastname, birthDate, intPhoneCode, longPhone, country);
+            if (!storage.update(pasajeroActualizado)) {
                 return new Response("Passenger not found in dataBase", Status.INTERNAL_SERVER_ERROR);
             }
             return new Response("Passenger data updated successfully", Status.OK);
@@ -274,13 +274,13 @@ public class PassengerController {
             }
             passenger = passengers.get(passengerId);
             flight = flights.get(flightId);
-            if(passenger == null){
+            if (passenger == null) {
                 return new Response("Passenger with selected ID not found", Status.BAD_REQUEST);
             }
-            if(flight == null){
+            if (flight == null) {
                 return new Response("Flight with selected ID not found", Status.BAD_REQUEST);
             }
-            if(flight.getNumPassengers() == flight.getPlane().getMaxCapacity()){
+            if (flight.getNumPassengers() == flight.getPlane().getMaxCapacity()) {
                 return new Response("Flight is full. Cannot add more passengers.", Status.BAD_REQUEST);
             }
             manager.addPassenger(flight, passenger);
@@ -290,30 +290,27 @@ public class PassengerController {
         }
     }
 
-    public static Response showPassengerFlights(String passengerId){
+    public static Response showPassengerFlights(String passengerId) {
         try {
             PassengerFlightFormatter formatter = new PassengerFlightFormatter();
             Passenger passenger = PassengerStorage.getInstance().get(passengerId);
-            if (passenger == null){
+            if (passenger == null) {
                 return new Response("Passenger not found in Database", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
             }
             ArrayList<Flight> flights = passenger.getFlights();
-            if (flights.isEmpty()){
-                return new Response("Passenger has no flights", Status.OK,  new ArrayList<>());
+            if (flights.isEmpty()) {
+                return new Response("Passenger has no flights", Status.OK, new ArrayList<>());
             }
             ArrayList<String[]> data = new ArrayList<>();
             for (Flight flight : flights) {
                 data.add(formatter.format(flight));
-                for (int i = 0; i < 3; i++) {
-                    System.out.println(formatter.format(flight)[i]);
-                }
             }
             return new Response("Passenger flights retrieved successfully.", Status.OK, data);
         } catch (Exception e) {
             return new Response("Error retrieving passenger flights: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
     }
-    
+
     public static Response getPassengersWithFormat() {
         try {
             PassengerFormatter formatter = new PassengerFormatter();
@@ -325,6 +322,26 @@ public class PassengerController {
             return new Response("Passengers retrieved successfully.", Status.OK, data);
         } catch (Exception e) {
             return new Response("Error retrieving passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+        }
+    }
+
+    public static Response changeUser(String id) {
+        try {
+            PassengerStorage storage = PassengerStorage.getInstance();
+            UserManager userManager = UserManager.getInstance();
+            Passenger passenger;
+            if (id.equals("Select User")) {
+                return new Response("Please select a user first", Status.BAD_REQUEST);
+            }
+            passenger = storage.get(id);
+            if (passenger == null) {
+                return new Response("Passenger with selected ID not found", Status.BAD_REQUEST);
+            }
+            userManager.setCurrentUser(passenger);
+            return new Response("User successfully changed", Status.OK);
+        } catch (Exception e) {
+            return new Response("Error selecting user: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+
         }
     }
 }

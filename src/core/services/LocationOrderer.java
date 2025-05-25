@@ -4,24 +4,25 @@
  */
 package core.services;
 
-import core.models.Passenger;
+import core.models.Location;
 import java.util.ArrayList;
 
 /**
  *
  * @author joelp
  */
-public class OrderedPassengers {
+public class LocationOrderer {
 
-    public static ArrayList<Passenger> orderPassengers(ArrayList<Passenger> originalList) {
-        ArrayList<Passenger> copiaList = new ArrayList<>();
+    public static ArrayList<Location> order(ArrayList<Location> originalList) {
+        ArrayList<Location> copiaList = new ArrayList<>();
 
-        for (Passenger pasajero : originalList) {
-            Passenger copia = pasajero.clone();
+        for (Location location : originalList) {
+            Location copia = location.clone();
             boolean inserted = false;
 
             for (int i = 0; i < copiaList.size(); i++) {
-                if (copia.getId() < copiaList.get(i).getId()) {
+
+                if (copia.getAirportId().compareTo(copiaList.get(i).getAirportId()) < 0) {
                     copiaList.add(i, copia);
                     inserted = true;
                     break;
@@ -35,4 +36,5 @@ public class OrderedPassengers {
 
         return copiaList;
     }
+
 }

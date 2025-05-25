@@ -11,9 +11,9 @@ import java.util.ArrayList;
  *
  * @author joelp
  */
-public class OrderedFlights {
+public class FlightOrderer {
     
-           public static ArrayList<Flight> OrderFlights(ArrayList<Flight> originalList) {
+           public static ArrayList<Flight> order(ArrayList<Flight> originalList) {
             ArrayList<Flight> orderedList = new ArrayList<>();
 
             for (Flight vuelo : originalList) {

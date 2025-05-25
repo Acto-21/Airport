@@ -4,42 +4,41 @@
  */
 package core.patterns.observer;
 
-import core.controllers.PassengerController;
+import core.controllers.PlaneController;
 import core.controllers.utils.Response;
-import core.models.Passenger;
+import core.models.Plane;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author User
  */
-public class PassengerFlightTableObserver extends Observer {
+public class PlaneComboBoxObserver extends Observer {
 
-    private DefaultTableModel tableModel;
-    private Passenger currentUser = null;
+    private JComboBox comboBox1;
 
-    public PassengerFlightTableObserver(DefaultTableModel tableModel) {
-        this.tableModel = tableModel;
+    public PlaneComboBoxObserver(JComboBox comboBox1) {
+        this.comboBox1 = comboBox1;
     }
 
     @Override
     public void notify(int value) {
-        if (value == 3) {
-            this.currentUser = UserManager.getInstance().getCurrentUser();
-        }
-        tableModel.setRowCount(0);
-        Response response = PassengerController.showPassengerFlights(String.valueOf(this.currentUser.getId()));
+        
+        comboBox1.removeAllItems();
+        Response response = PlaneController.getAllPlanes();
         if (response.getStatus() >= 500) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
         } else if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         } else {
-            for (String[] data : (ArrayList<String[]>) response.getObject()) {
-                tableModel.addRow(data);
+            comboBox1.addItem("Plane");
+            for (Plane p : (ArrayList<Plane>) response.getObject()) {
+                comboBox1.addItem(p.getId());
             }
         }
+        
     }
 
 }

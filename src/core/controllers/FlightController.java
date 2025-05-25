@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import core.models.storage.reader.LineFileReader;
 import core.services.FlightCoordinator;
-import core.services.OrderedFlights;
+import core.services.FlightOrderer;
 import core.services.formatters.FlightFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class FlightController {
     
         try {
             ArrayList<Flight> originalList = FlightStorage.getInstance().getAll();
-            orderedList = OrderedFlights.OrderFlights(originalList);
+            orderedList = FlightOrderer.order(originalList);
         } catch (Exception e) {
             return new Response("Error cloning flights.", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }

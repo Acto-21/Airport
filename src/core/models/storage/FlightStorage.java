@@ -43,7 +43,7 @@ public class FlightStorage extends Observable implements Storage<Flight> {
     
     public boolean update(Flight item) {
         for (int i = 0; i < this.flights.size(); i++) {
-            if (this.flights.get(i).getId() == item.getId()) {
+            if (this.flights.get(i).getId().equals(item.getId())) {
                 this.flights.set(i, item);
                 notifyAll(2);
                 return true;

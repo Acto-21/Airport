@@ -10,7 +10,7 @@ import core.models.Location;
 import core.models.storage.LocationStorage;
 import core.models.storage.loaders.LocationLoader;
 import core.models.storage.reader.LineFileReader;
-import core.services.OrderedLocations;
+import core.services.LocationOrderer;
 import core.services.formatters.LocationFormatter;
 import java.util.ArrayList;
 
@@ -37,7 +37,7 @@ public class LocationController {
         ArrayList<Location> copiaList = new ArrayList<>();
         try {
             ArrayList<Location> originalList = LocationStorage.getInstance().getAll();
-            copiaList = OrderedLocations.orderLocations(originalList);
+            copiaList = LocationOrderer.order(originalList);
         } catch (Exception e) {
             return new Response("Error cloning locations: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
