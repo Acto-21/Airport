@@ -10,6 +10,7 @@ import core.models.Location;
 import core.models.storage.LocationStorage;
 import core.models.storage.loaders.LocationLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.OrderedLocations;
 import core.services.formatters.LocationFormatter;
 import java.util.ArrayList;
 
@@ -32,15 +33,15 @@ public class LocationController {
     }
 
     public static Response getAllLocations() {
-        ArrayList<Location> originalList = LocationStorage.getInstance().getAll();
+
         ArrayList<Location> copiaList = new ArrayList<>();
-        for (Location locacion : originalList) {
-            try {
-                copiaList.add(locacion.clone());
-            } catch (Exception e) {
-                return new Response("Error cloning locations: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
-            }
+        try {
+            ArrayList<Location> originalList = LocationStorage.getInstance().getAll();
+            copiaList = OrderedLocations.orderLocations(originalList);
+        } catch (Exception e) {
+            return new Response("Error cloning locations: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
+
         return new Response("Locations retrieved successfully.", Status.OK, copiaList);
     }
 

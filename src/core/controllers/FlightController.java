@@ -18,11 +18,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import core.models.storage.reader.LineFileReader;
 import core.services.FlightCoordinator;
+import core.services.OrderedFlights;
 import core.services.formatters.FlightFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  *
@@ -45,28 +45,16 @@ public class FlightController {
     }
 
     public static Response getAllFlights() {
-    List<Flight> originalList = FlightStorage.getInstance().getAll();
-    List<Flight> orderedList = new ArrayList<>();
-
-    for (Flight vuelo : originalList) {
+    
+    ArrayList<Flight> orderedList = new ArrayList<>();
+    
         try {
-            Flight copia = vuelo.clone();
-
-            boolean insertado = false;
-            for (int i = 0; i < orderedList.size(); i++) {
-                if (copia.getDepartureDate().isAfter(orderedList.get(i).getDepartureDate())) {
-                    orderedList.add(i, copia);
-                    insertado = true;
-                    break;
-                }
-            }
-            if (!insertado) {
-                orderedList.add(copia);
-            }
+            ArrayList<Flight> originalList = FlightStorage.getInstance().getAll();
+            orderedList = OrderedFlights.OrderFlights(originalList);
         } catch (Exception e) {
             return new Response("Error cloning flights.", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
-    }
+    
     return new Response("Flights retrieved successfully.", Status.OK, orderedList);
 }
 

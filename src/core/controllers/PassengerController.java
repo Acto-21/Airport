@@ -12,6 +12,7 @@ import core.models.storage.FlightStorage;
 import core.models.storage.PassengerStorage;
 import core.models.storage.loaders.PassengerLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.OrderedPassengers;
 import core.services.PassengerManager;
 import core.services.formatters.PassengerFlightFormatter;
 import core.services.formatters.PassengerFormatter;
@@ -39,15 +40,16 @@ public class PassengerController {
     }
 
     public static Response getAllPassengers() {
-        ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
+        
         ArrayList<Passenger> copiaList = new ArrayList<>();
-        for (Passenger pasajero : originalList) {
+        
             try {
-                copiaList.add(pasajero.clone());
+                ArrayList<Passenger> originalList = PassengerStorage.getInstance().getAll();
+                copiaList = OrderedPassengers.orderPassengers(originalList) ;
             } catch (Exception e) {
                 return new Response("Error cloning passengers: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
             }
-        }
+        
         return new Response("Passengers retrieved successfully.", Status.OK, copiaList);
     }
 

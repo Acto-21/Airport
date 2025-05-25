@@ -10,6 +10,7 @@ import core.models.Plane;
 import core.models.storage.PlaneStorage;
 import core.models.storage.loaders.PlaneLoader;
 import core.models.storage.reader.LineFileReader;
+import core.services.OrderedPlanes;
 import core.services.formatters.PlaneFormatter;
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  * @author User
  */
 public class PlaneController {
-
+    
     public static Response loadPlanesFromJson(String path) {
         try {
             PlaneStorage planes = PlaneStorage.getInstance();
@@ -30,20 +31,21 @@ public class PlaneController {
             return new Response("Error loading planes: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
-
+    
     public static Response getAllPlanes() {
-        ArrayList<Plane> originalList = PlaneStorage.getInstance().getAll();
+        
         ArrayList<Plane> copiaList = new ArrayList<>();
-        for (Plane avion : originalList) {
-            try {
-                copiaList.add(avion.clone());
-            } catch (Exception e) {
-                return new Response("Error cloning planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
-            }
+        
+        try {
+            ArrayList<Plane> originalList = PlaneStorage.getInstance().getAll();
+            copiaList = OrderedPlanes.orderPlanes(originalList);
+        } catch (Exception e) {
+            return new Response("Error cloning planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
+        
         return new Response("Planes retrieved successfully.", Status.OK, copiaList);
     }
-
+    
     public static Response addPlane(String id, String brand, String model, String maxCapacity, String airline) {
         PlaneStorage storage = PlaneStorage.getInstance();
         int intMaxCapacity;
@@ -97,16 +99,16 @@ public class PlaneController {
         }
     }
     
-    public static Response getPlanesWithFormat(){
-        try{
+    public static Response getPlanesWithFormat() {
+        try {
             PlaneFormatter formatter = new PlaneFormatter();
             ArrayList<Plane> planes = (ArrayList<Plane>) PlaneController.getAllPlanes().getObject();
             ArrayList<String[]> data = new ArrayList<>();
-            for (Plane plane: planes){
+            for (Plane plane : planes) {
                 data.add(formatter.format(plane));
             }
             return new Response("Planes retrieved successfully.", Status.OK, data);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new Response("Error retrieving planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
     }
