@@ -116,11 +116,12 @@ public class PassengerController {
             }
 
             if (country.isEmpty()) return new Response("Country must be not empty", Status.BAD_REQUEST);
-
+            
             storage.add((IPassenger) new Passenger(longId, firstname, lastname, birthDate, intPhoneCode, longPhone, country));
             return new Response("Passenger created successfully", Status.CREATED);
         } catch (Exception e) {
-            return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new Response("Unexpected error: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR);
         }
     }
 

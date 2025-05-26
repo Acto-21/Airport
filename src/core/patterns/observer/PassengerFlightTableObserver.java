@@ -29,15 +29,17 @@ public class PassengerFlightTableObserver extends Observer {
         if (value == 3) {
             this.currentUser = UserManager.getInstance().getCurrentUser();
         }
-        tableModel.setRowCount(0);
-        Response response = PassengerController.showPassengerFlights(String.valueOf(this.currentUser.getId()));
-        if (response.getStatus() >= 500) {
-            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
-        } else if (response.getStatus() >= 400) {
-            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
-        } else {
-            for (String[] data : (ArrayList<String[]>) response.getObject()) {
-                tableModel.addRow(data);
+        if (currentUser != null) {
+            tableModel.setRowCount(0);
+            Response response = PassengerController.showPassengerFlights(String.valueOf(this.currentUser.getId()));
+            if (response.getStatus() >= 500) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+            } else if (response.getStatus() >= 400) {
+                JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+            } else {
+                for (String[] data : (ArrayList<String[]>) response.getObject()) {
+                    tableModel.addRow(data);
+                }
             }
         }
     }
