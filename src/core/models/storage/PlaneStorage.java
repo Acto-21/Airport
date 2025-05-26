@@ -5,13 +5,14 @@
 package core.models.storage;
 
 import core.models.Plane;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
-public class PlaneStorage implements Storage<Plane> {
+public class PlaneStorage extends Observable implements Storage<Plane> {
 
     private static PlaneStorage instance;
 
@@ -36,6 +37,7 @@ public class PlaneStorage implements Storage<Plane> {
             }
         }
         this.planes.add(item);
+        notifyAll(1);
         return true;
     }
 

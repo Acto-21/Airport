@@ -5,17 +5,19 @@
 package core.models.storage;
 
 import core.models.Flight;
+import core.models.IFlight;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
-public class FlightStorage implements Storage<Flight> {
+public class FlightStorage extends Observable implements Storage<IFlight> {
 
     private static FlightStorage instance;
 
-    private ArrayList<Flight> flights;
+    private ArrayList<IFlight> flights;
 
     private FlightStorage() {
         this.flights = new ArrayList<>();
@@ -29,19 +31,31 @@ public class FlightStorage implements Storage<Flight> {
     }
 
     @Override
-    public boolean add(Flight item) {
-        for (Flight f : this.flights) {
+    public boolean add(IFlight item) {
+        for (IFlight f : this.flights) {
             if (f.getId().equals(item.getId())) {
                 return false;
             }
         }
         this.flights.add(item);
+        notifyAll(1);
         return true;
+    }
+    
+    public boolean update(IFlight item) {
+        for (int i = 0; i < this.flights.size(); i++) {
+            if (this.flights.get(i).getId().equals(item.getId())) {
+                this.flights.set(i, item);
+                notifyAll(2);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    public Flight get(String id) {  
-        for (Flight flight : this.flights) {
+    public IFlight get(String id) {  
+        for (IFlight flight : this.flights) {
             if (flight.getId().equals(id)) {
                 return flight;
             }
@@ -49,7 +63,7 @@ public class FlightStorage implements Storage<Flight> {
         return null;
     }
 
-    public ArrayList<Flight> getAll() {
+    public ArrayList<IFlight> getAll() {
         return this.flights;
     }
 }

@@ -4,29 +4,30 @@
  */
 package core.models;
 
-import core.models.prototype.Prototype;
+import core.patterns.prototype.Prototype;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author edangulo
  */
-public class Flight implements Prototype<Flight> {
+public class Flight implements IFlight, Prototype<Flight> {
 
     private final String id;
-    private ArrayList<Passenger> passengers;
-    private Plane plane;
-    private Location departureLocation;
-    private Location scaleLocation;
-    private Location arrivalLocation;
+    private List<IPassenger> passengers;
+    private IPlane plane;
+    private ILocation departureLocation;
+    private ILocation scaleLocation;
+    private ILocation arrivalLocation;
     private LocalDateTime departureDate;
     private int hoursDurationArrival;
     private int minutesDurationArrival;
     private int hoursDurationScale;
     private int minutesDurationScale;
 
-    public Flight(String id, Plane plane, Location departureLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
+    public Flight(String id, IPlane plane, ILocation departureLocation, ILocation arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival) {
         this.id = id;
         this.passengers = new ArrayList<>();
         this.plane = plane;
@@ -39,7 +40,7 @@ public class Flight implements Prototype<Flight> {
         this.plane.addFlight(this);
     }
 
-    public Flight(String id, Plane plane, Location departureLocation, Location scaleLocation, Location arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival, int hoursDurationScale, int minutesDurationScale) {
+    public Flight(String id, IPlane plane, ILocation departureLocation, ILocation scaleLocation, ILocation arrivalLocation, LocalDateTime departureDate, int hoursDurationArrival, int minutesDurationArrival, int hoursDurationScale, int minutesDurationScale) {
         this.id = id;
         this.passengers = new ArrayList<>();
         this.plane = plane;
@@ -55,80 +56,121 @@ public class Flight implements Prototype<Flight> {
         this.plane.addFlight(this);
     }
 
-    public void addPassenger(Passenger passenger) {
+    public void addPassenger(IPassenger passenger) {
         this.passengers.add(passenger);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public Location getDepartureLocation() {
-        return departureLocation;
-    }
-
-    public Location getScaleLocation() {
-        return scaleLocation;
-    }
-
-    public Location getArrivalLocation() {
-        return arrivalLocation;
-    }
-
-    public LocalDateTime getDepartureDate() {
-        return departureDate;
-    }
-
-    public int getHoursDurationArrival() {
-        return hoursDurationArrival;
-    }
-
-    public int getMinutesDurationArrival() {
-        return minutesDurationArrival;
-    }
-
-    public int getHoursDurationScale() {
-        return hoursDurationScale;
-    }
-
-    public int getMinutesDurationScale() {
-        return minutesDurationScale;
-    }
-
-    public Plane getPlane() {
-        return plane;
-    }
-    
-    public ArrayList<Passenger> getPassengers() {
-        return passengers;
-    }
-    
-    public void setDepartureDate(LocalDateTime departureDate) {
-        this.departureDate = departureDate;
-    }
-
-    public LocalDateTime calculateArrivalDate() {
-        return departureDate.plusHours(hoursDurationScale).plusHours(hoursDurationArrival).plusMinutes(minutesDurationScale).plusMinutes(minutesDurationArrival);
-    }
-
-    public int getNumPassengers() {
-        return passengers.size();
-    }
-
-    public void setPassengers(ArrayList<Passenger> passengers) {
+    public void setPassengers(List<IPassenger> passengers) {
         this.passengers = passengers;
     }
 
     @Override
-    public Flight clone(){
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public ILocation getDepartureLocation() {
+        return departureLocation;
+    }
+
+    @Override
+    public ILocation getScaleLocation() {
+        return scaleLocation;
+    }
+
+    @Override
+    public ILocation getArrivalLocation() {
+        return arrivalLocation;
+    }
+
+    @Override
+    public LocalDateTime getDepartureDate() {
+        return departureDate;
+    }
+
+    @Override
+    public int getHoursDurationArrival() {
+        return hoursDurationArrival;
+    }
+
+    @Override
+    public int getMinutesDurationArrival() {
+        return minutesDurationArrival;
+    }
+
+    @Override
+    public int getHoursDurationScale() {
+        return hoursDurationScale;
+    }
+
+    @Override
+    public int getMinutesDurationScale() {
+        return minutesDurationScale;
+    }
+
+    @Override
+    public IPlane getPlane() {
+        return plane;
+    }
+
+    @Override
+    public List<IPassenger> getPassengers() {
+        return passengers;
+    }
+
+    @Override
+    public int getNumPassengers() {
+        return passengers.size();
+    }
+
+    @Override
+    public LocalDateTime calculateArrivalDate() {
+        return departureDate
+                .plusHours(hoursDurationScale)
+                .plusMinutes(minutesDurationScale)
+                .plusHours(hoursDurationArrival)
+                .plusMinutes(minutesDurationArrival);
+    }
+
+    @Override
+    public Flight clone() {
         Flight copy;
-        if (this.getScaleLocation() != null){
-            copy = new Flight(this.id,this.plane.clone(),this.departureLocation.clone(),this.scaleLocation.clone(),this.arrivalLocation.clone(),this.departureDate,this.hoursDurationArrival,this.minutesDurationArrival,this.hoursDurationScale,this.minutesDurationScale);
-        }else{
-            copy = new Flight(this.id,this.plane.clone(),this.departureLocation.clone(),this.arrivalLocation.clone(),this.departureDate,this.hoursDurationArrival,this.minutesDurationArrival);
+        if (this.scaleLocation != null) {
+            copy = new Flight(
+                    this.id,
+                    plane.clone(),
+                    departureLocation.clone(),
+                    scaleLocation.clone(),
+                    arrivalLocation.clone(),
+                    departureDate,
+                    hoursDurationArrival,
+                    minutesDurationArrival,
+                    hoursDurationScale,
+                    minutesDurationScale
+            );
+        } else {
+            copy = new Flight(
+                    this.id,
+                    plane.clone(),
+                    departureLocation.clone(),
+                    arrivalLocation.clone(),
+                    departureDate,
+                    hoursDurationArrival,
+                    minutesDurationArrival
+            );
         }
-        copy.setPassengers(this.passengers);
+
+        List<IPassenger> clonedPassengers = new ArrayList<>();
+        for (IPassenger p : this.passengers) {
+            clonedPassengers.add(p); // idealmente: p.clone()
+        }
+        copy.setPassengers(clonedPassengers);
+
         return copy;
     }
 
+    public void setDepartureDate(LocalDateTime plusMinutes) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

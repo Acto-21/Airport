@@ -4,10 +4,11 @@
  */
 package core.models;
 
-import core.models.prototype.Prototype;
+import core.patterns.prototype.Prototype;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,7 +23,7 @@ public class Passenger implements Prototype<Passenger> {
     private int countryPhoneCode;
     private long phone;
     private String country;
-    private ArrayList<Flight> flights;
+    private ArrayList<IFlight> flights;
 
     public Passenger(long id, String firstname, String lastname, LocalDate birthDate, int countryPhoneCode, long phone, String country) {
         this.id = id;
@@ -67,7 +68,7 @@ public class Passenger implements Prototype<Passenger> {
         return country;
     }
 
-    public ArrayList<Flight> getFlights() {
+    public List<IFlight> getFlights() {
         return flights;
     }
 
@@ -103,7 +104,7 @@ public class Passenger implements Prototype<Passenger> {
         return flights.size();
     }
 
-    public void setFlights(ArrayList<Flight> flights) {
+    public void setFlights(ArrayList<IFlight> flights) {
         this.flights = flights;
     }
 

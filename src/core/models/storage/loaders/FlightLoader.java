@@ -5,6 +5,9 @@
 package core.models.storage.loaders;
 
 import core.models.Flight;
+import core.models.IFlight;
+import core.models.ILocation;
+import core.models.IPlane;
 import core.models.Location;
 import core.models.Plane;
 import core.models.storage.FlightStorage;
@@ -40,14 +43,14 @@ public class FlightLoader implements JsonDataLoader<Flight> {
             String id = flight.getString("id");
             
             String planeId = flight.getString("plane");
-            Plane plane = this.planes.get(planeId);
+            IPlane plane = this.planes.get(planeId);
 
 
             String departureLocationId = flight.getString("departureLocation");
-            Location departureLocation = this.locations.get(departureLocationId);
+            ILocation departureLocation = (ILocation) this.locations.get(departureLocationId);
 
             String arrivalLocationId = flight.getString("arrivalLocation");
-            Location arrivalLocation = this.locations.get(arrivalLocationId);
+            ILocation arrivalLocation = (ILocation) this.locations.get(arrivalLocationId);
 
             String departureDateString = flight.getString("departureDate");
             LocalDateTime departureDate = LocalDateTime.parse(departureDateString);
@@ -57,7 +60,7 @@ public class FlightLoader implements JsonDataLoader<Flight> {
             int hoursDurationScale = flight.getInt("hoursDurationScale");
             int minutesDurationScale = flight.getInt("minutesDurationScale");
 
-            Flight newFlight;
+            IFlight newFlight;
 
             // Verifica si "scaleLocation" es null
             if (flight.isNull("scaleLocation")) {
@@ -69,7 +72,7 @@ public class FlightLoader implements JsonDataLoader<Flight> {
                 String scaleLocationId = flight.getString("scaleLocation");
                 Location scaleLocation = this.locations.get(scaleLocationId);
                 newFlight = new Flight(
-                        id, plane, departureLocation, scaleLocation, arrivalLocation,
+                        id, plane, departureLocation, (ILocation) scaleLocation, arrivalLocation,
                         departureDate, hoursDurationArrival, minutesDurationArrival,
                         hoursDurationScale, minutesDurationScale
                 );

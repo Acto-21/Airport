@@ -5,13 +5,14 @@
 package core.models.storage;
 
 import core.models.Location;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
-public class LocationStorage implements Storage<Location> {
+public class LocationStorage extends Observable implements Storage<Location> {
 
     private static LocationStorage instance;
 
@@ -36,6 +37,7 @@ public class LocationStorage implements Storage<Location> {
             }
         }
         this.locations.add(item);
+        notifyAll(1);
         return true;
     }
 

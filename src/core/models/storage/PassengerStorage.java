@@ -4,54 +4,63 @@
  */
 package core.models.storage;
 
-import core.models.Passenger;
+import core.models.IPassenger;
+import core.patterns.observer.Observable;
 import java.util.ArrayList;
 
-/**
- *
- * @author User
- */
-public class PassengerStorage implements Storage<Passenger>{
+public class PassengerStorage extends Observable implements Storage<IPassenger> {
 
     private static PassengerStorage instance;
-    
-    private ArrayList<Passenger> passengers;
-    
+
+    private ArrayList<IPassenger> passengers;
+
     private PassengerStorage() {
         this.passengers = new ArrayList<>();
     }
-    
+
     public static PassengerStorage getInstance() {
         if (instance == null) {
             instance = new PassengerStorage();
         }
         return instance;
     }
-    
+
     @Override
-    public boolean add(Passenger item) {
-        for (Passenger p : this.passengers) {
-            if (p.getId() == item.getId()) {
+    public boolean add(IPassenger item) {
+        for (IPassenger p : this.passengers) {
+            if (p.getId().equals(item.getId())) {
                 return false;
             }
         }
         this.passengers.add(item);
+        notifyAll(1);
         return true;
     }
 
+    public boolean update(IPassenger item) {
+        for (int i = 0; i < this.passengers.size(); i++) {
+            if (this.passengers.get(i).getId().equals(item.getId())) {
+                this.passengers.set(i, item);
+                notifyAll(2);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
-    public Passenger get(String id) {
-        Long idLong = Long.parseLong(id);
-        for (Passenger passenger: this.passengers) {
-            if (passenger.getId() == idLong) {
+    public IPassenger get(String id) {
+        for (IPassenger passenger : this.passengers) {
+            if (passenger.getId().equals(id)) {
                 return passenger;
             }
         }
         return null;
     }
-    
-    public ArrayList<Passenger> getAll() {
+
+    public ArrayList<IPassenger> getAll() {
         return this.passengers;
-    }   
-    
+    }
 }
+
+

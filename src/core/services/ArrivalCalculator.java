@@ -5,6 +5,7 @@
 package core.services;
 
 import core.models.Flight;
+import core.models.IFlight;
 import java.time.LocalDateTime;
 
 /**
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
  */
 public class ArrivalCalculator{
 
-    public static LocalDateTime calculate(Flight flight) {
+    public static LocalDateTime calculate(IFlight flight) {
         LocalDateTime departureDate = flight.getDepartureDate();
         int hoursDurationScale = flight.getHoursDurationScale();
         int hoursDurationArrival = flight.getHoursDurationArrival();

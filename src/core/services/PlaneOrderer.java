@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author joelp
  */
-public class OrderedPlanes {
+public class PlaneOrderer {
     
     public static ArrayList<Plane> orderPlanes(ArrayList<Plane> originalList) {
     ArrayList<Plane> copiaList = new ArrayList<>();

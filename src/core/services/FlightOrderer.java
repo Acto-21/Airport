@@ -5,18 +5,20 @@
 package core.services;
 
 import core.models.Flight;
+import core.models.IFlight;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author joelp
  */
-public class OrderedFlights {
+public class FlightOrderer {
     
-           public static ArrayList<Flight> OrderFlights(ArrayList<Flight> originalList) {
-            ArrayList<Flight> orderedList = new ArrayList<>();
+           public static ArrayList<IFlight> order(ArrayList<IFlight> originalList) {
+            ArrayList<IFlight> orderedList = new ArrayList<>();
 
-            for (Flight vuelo : originalList) {
+            for (IFlight vuelo : originalList) {
                 int insertIndex = 0;
                 while (insertIndex < orderedList.size()
                         && vuelo.getDepartureDate().isAfter(orderedList.get(insertIndex).getDepartureDate())) {
