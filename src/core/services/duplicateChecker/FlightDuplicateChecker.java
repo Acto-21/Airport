@@ -4,16 +4,16 @@
  */
 package core.services.duplicateChecker;
 
-import core.models.Flight;
+import core.models.IFlight;
 
 /**
  *
  * @author User
  */
-public class FlightDuplicateChecker implements DuplicateChecker<Flight> {
+public class FlightDuplicateChecker implements DuplicateChecker<IFlight> {
     
     @Override
-    public boolean isDuplicate(Flight existing, Flight candidate) {
+    public boolean isDuplicate(IFlight existing, IFlight candidate) {
         return existing.getId().equals(candidate.getId());
     }
     

@@ -6,6 +6,7 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.ILocation;
 import core.models.Location;
 import core.models.storage.LocationStorage;
 import core.models.storage.loaders.LocationJsonLoader;
@@ -36,9 +37,9 @@ public class LocationController {
 
     public static Response getAllLocations() {
 
-        ArrayList<Location> copiaList = new ArrayList<>();
+        ArrayList<ILocation> copiaList = new ArrayList<>();
         try {
-            ArrayList<Location> originalList = LocationStorage.getInstance().getAll();
+            ArrayList<ILocation> originalList = LocationStorage.getInstance().getAll();
             copiaList = LocationOrderer.order(originalList);
         } catch (Exception e) {
             return new Response("Error cloning locations: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());

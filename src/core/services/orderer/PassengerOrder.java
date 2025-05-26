@@ -4,35 +4,39 @@
  */
 package core.services.orderer;
 
-import core.models.Passenger;
-import java.util.ArrayList;
 
 /**
  *
  * @author joelp
  */
+
+import core.models.IPassenger;
+import java.util.ArrayList;
+
 public class PassengerOrder {
 
-    public static ArrayList<Passenger> order(ArrayList<Passenger> originalList) {
-        ArrayList<Passenger> copiaList = new ArrayList<>();
+    public static ArrayList<IPassenger> order(ArrayList<IPassenger> originalList) {
+        ArrayList<IPassenger> orderedList = new ArrayList<>();
 
-        for (Passenger pasajero : originalList) {
-            Passenger copia = pasajero.clone();
+        for (IPassenger passenger : originalList) {
             boolean inserted = false;
+            long passengerId = passenger.getId();
 
-            for (int i = 0; i < copiaList.size(); i++) {
-                if (copia.getId() < copiaList.get(i).getId()) {
-                    copiaList.add(i, copia);
+            for (int i = 0; i < orderedList.size(); i++) {
+                long currentId = orderedList.get(i).getId();
+                if (passengerId < currentId) {
+                    orderedList.add(i, passenger);
                     inserted = true;
                     break;
                 }
             }
 
             if (!inserted) {
-                copiaList.add(copia);
+                orderedList.add(passenger);
             }
         }
 
-        return copiaList;
+        return orderedList;
     }
 }
+

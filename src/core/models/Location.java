@@ -10,7 +10,7 @@ import core.patterns.prototype.Prototype;
  *
  * @author edangulo
  */
-public class Location implements Prototype<Location> {
+public class Location implements Prototype<ILocation>, ILocation {
     
     private final String airportId;
     private String airportName;
@@ -28,26 +28,32 @@ public class Location implements Prototype<Location> {
         this.airportLongitude = airportLongitude;
     }
 
+    @Override
     public String getAirportId() {
         return airportId;
     }
 
+    @Override
     public String getAirportName() {
         return airportName;
     }
 
+    @Override
     public String getAirportCity() {
         return airportCity;
     }
 
+    @Override
     public String getAirportCountry() {
         return airportCountry;
     }
 
+    @Override
     public double getAirportLatitude() {
         return airportLatitude;
     }
 
+    @Override
     public double getAirportLongitude() {
         return airportLongitude;
     }

@@ -4,6 +4,7 @@
  */
 package core.models.storage.loaders;
 
+import core.models.IPassenger;
 import core.models.Passenger;
 import core.models.storage.PassengerStorage;
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public class PassengerJsonLoader implements DataLoader<Passenger>{
             String country = passenger.getString("country");
             
             Passenger newPassenger = new Passenger(id,firstname,lastname,birthDate,countryPhoneCode,phone,country);
-            this.passengers.add(newPassenger);
+            this.passengers.add((IPassenger) newPassenger);
         }
     }
     

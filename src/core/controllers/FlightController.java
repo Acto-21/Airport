@@ -7,6 +7,9 @@ package core.controllers;
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
 import core.models.Flight;
+import core.models.IFlight;
+import core.models.ILocation;
+import core.models.IPlane;
 import core.models.Location;
 import core.models.Plane;
 import core.models.storage.FlightStorage;
@@ -46,21 +49,19 @@ public class FlightController {
     }
 
     public static Response getAllFlights() {
-    
-    ArrayList<Flight> orderedList = new ArrayList<>();
-    
+        ArrayList<IFlight> orderedList = new ArrayList<>();
         try {
-            ArrayList<Flight> originalList = FlightStorage.getInstance().getAll();
+            ArrayList<IFlight> originalList = FlightStorage.getInstance().getAll();
             orderedList = FlightOrderer.order(originalList);
         } catch (Exception e) {
             return new Response("Error cloning flights.", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
-    
-    return new Response("Flights retrieved successfully.", Status.OK, orderedList);
-}
 
-    public static Response addFlight(String id, String planeId, String departureId, String arrivalId, String year, String month, String day, String hour, String minutes, String hoursArrivalStr, String minutesArrivalStr,
-            String scaleId, String hoursScaleStr, String minutesScaleStr) {
+        return new Response("Flights retrieved successfully.", Status.OK, orderedList);
+    }
+
+    public static Response addFlight(String id, String planeId, String departureId, String arrivalId, String year, String month, String day, String hour, String minutes,
+                                     String hoursArrivalStr, String minutesArrivalStr, String scaleId, String hoursScaleStr, String minutesScaleStr) {
 
         if (id.length() != 6) {
             return new Response("The flight ID must be exactly 6 characters (3 letters followed by 3 numbers).", Status.BAD_REQUEST);
@@ -84,17 +85,17 @@ public class FlightController {
             return new Response("A flight already exists with that ID.", Status.BAD_REQUEST);
         }
 
-        Plane plane = PlaneStorage.getInstance().get(planeId);
+        IPlane plane = PlaneStorage.getInstance().get(planeId);
         if (plane == null) {
             return new Response("The plane does not exist.", Status.BAD_REQUEST);
         }
 
-        Location departure = LocationStorage.getInstance().get(departureId);
+        ILocation departure = (ILocation) LocationStorage.getInstance().get(departureId);
         if (departure == null) {
             return new Response("The exit location does not exist.", Status.BAD_REQUEST);
         }
 
-        Location arrival = LocationStorage.getInstance().get(arrivalId);
+        ILocation arrival = (ILocation) LocationStorage.getInstance().get(arrivalId);
         if (arrival == null) {
             return new Response("The arrival location does not exist.", Status.BAD_REQUEST);
         }
@@ -104,7 +105,7 @@ public class FlightController {
         LocalDateTime departureLocalDate;
         int intYear, intMonth, intDay;
         if (year.equals("")) {
-            return new Response("You must choose a month before proceeding.", Status.BAD_REQUEST);
+            return new Response("You must choose a year before proceeding.", Status.BAD_REQUEST);
         }
         try {
             intYear = Integer.parseInt(year);
@@ -138,13 +139,15 @@ public class FlightController {
         } catch (NumberFormatException e) {
             return new Response("Day must be a number", Status.BAD_REQUEST);
         }
+
         int intHour, intMinutes;
         if (hour.equals("Hour")) {
-            return new Response("You must choose a hour before proceeding.", Status.BAD_REQUEST);
+            return new Response("You must choose an hour before proceeding.", Status.BAD_REQUEST);
         }
         if (minutes.equals("Minute")) {
-            return new Response("You must choose a minute before proceeding.", Status.BAD_REQUEST);
+            return new Response("You must choose minutes before proceeding.", Status.BAD_REQUEST);
         }
+
         intHour = Integer.parseInt(hour);
         intMinutes = Integer.parseInt(minutes);
 
@@ -157,34 +160,29 @@ public class FlightController {
             return new Response("Departure date is invalid or does not exist.", Status.BAD_REQUEST);
         }
 
-        if (hoursArrivalStr.equals("Hour")) {
-            return new Response("You must choose a hour before proceeding.", Status.BAD_REQUEST);
+        if (hoursArrivalStr.equals("Hour") || minutesArrivalStr.equals("Minute")) {
+            return new Response("You must specify a valid flight duration.", Status.BAD_REQUEST);
         }
-        if (minutesArrivalStr.equals("Minute")) {
-            return new Response("You must choose a minute before proceeding.", Status.BAD_REQUEST);
-        }
+
         int hoursArrival = Integer.parseInt(hoursArrivalStr);
         int minutesArrival = Integer.parseInt(minutesArrivalStr);
-        int hoursScale = 0;
-        int minutesScale = 0;
 
         if (hoursArrival == 0 && minutesArrival == 0) {
             return new Response("The duration of the flight must be greater than 00:00.", Status.BAD_REQUEST);
         }
 
-        Location scale = null;
-        boolean hayEscala = (!scaleId.equals("Location"));
+        int hoursScale = 0;
+        int minutesScale = 0;
+        ILocation scale = null;
+        boolean hasScale = (!scaleId.equals("Location"));
 
-        if (hayEscala) {
-            scale = LocationStorage.getInstance().get(scaleId);
+        if (hasScale) {
+            scale = (ILocation) LocationStorage.getInstance().get(scaleId);
             if (scale == null) {
                 return new Response("Scale location does not exist.", Status.BAD_REQUEST);
             }
-            if (hoursScaleStr.equals("Hour")) {
-                return new Response("You must choose a scale hour before proceeding.", Status.BAD_REQUEST);
-            }
-            if (minutesScaleStr.equals("Minute")) {
-                return new Response("You must choose a scale minute before proceeding.", Status.BAD_REQUEST);
+            if (hoursScaleStr.equals("Hour") || minutesScaleStr.equals("Minute")) {
+                return new Response("You must choose a scale duration.", Status.BAD_REQUEST);
             }
             hoursScale = Integer.parseInt(hoursScaleStr);
             minutesScale = Integer.parseInt(minutesScaleStr);
@@ -202,50 +200,46 @@ public class FlightController {
         if(arrival == scale){
             return new Response("The arrival and scale location cannot be the same", Status.BAD_REQUEST);
         }
-        Flight flight;
-        if (hayEscala) {
+        
+        IFlight flight;
+        if (hasScale) {
             flight = new Flight(id, plane, departure, scale, arrival, departureLocalDate, hoursArrival, minutesArrival, hoursScale, minutesScale);
         } else {
             flight = new Flight(id, plane, departure, arrival, departureLocalDate, hoursArrival, minutesArrival);
         }
 
-        FlightStorage.getInstance().add(flight);
+        FlightStorage.getInstance().add((Flight) flight);
         return new Response("Flight added successfully.", Status.CREATED);
     }
 
     public static Response delayFlight(String flightId, String hour, String minutes) {
         int intHour, intMinutes;
         FlightCoordinator flightCoordinator = new FlightCoordinator();
-        Flight flight = FlightStorage.getInstance().get(flightId);
+        IFlight flight = FlightStorage.getInstance().get(flightId);
         if (flight == null) {
             return new Response("The flight does not exist.", Status.BAD_REQUEST);
         }
-        if (hour.equals("Hour")) {
-            return new Response("You must choose a hour before proceeding.", Status.BAD_REQUEST);
-        }
-        if (minutes.equals("Minute")) {
-            return new Response("You must choose a minute before proceeding.", Status.BAD_REQUEST);
+        if (hour.equals("Hour") || minutes.equals("Minute")) {
+            return new Response("You must choose a valid delay time.", Status.BAD_REQUEST);
         }
         intHour = Integer.parseInt(hour);
         intMinutes = Integer.parseInt(minutes);
-        flightCoordinator.delay(flight, intHour, intMinutes);
+        flightCoordinator.delay((Flight) flight, intHour, intMinutes);
         return new Response("The flight has been successfully delayed", Status.OK);
-
     }
 
     public static Response getFlightsWithFormat() {
         try {
             FlightFormatter formatter = new FlightFormatter();
-            ArrayList<Flight> flights = (ArrayList<Flight>) FlightController.getAllFlights().getObject();
+            ArrayList<IFlight> flights = (ArrayList<IFlight>) FlightController.getAllFlights().getObject();
             ArrayList<String[]> data = new ArrayList<>();
 
-            for (Flight flight : flights) {
-                data.add(formatter.format(flight));
+            for (IFlight flight : flights) {
+                data.add(formatter.format((Flight) flight));
             }
             return new Response("Flights retrieved successfully.", Status.OK, data);
         } catch (Exception e) {
-            return new Response("Error retrieving flights: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
+            return new Response("Error retrieving flights: " + e.getMessage(), Status.INTERNAL_SERVER_ERROR, new ArrayList<>());
         }
-
     }
 }

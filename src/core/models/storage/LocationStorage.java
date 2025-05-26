@@ -4,6 +4,7 @@
  */
 package core.models.storage;
 
+import core.models.ILocation;
 import core.models.Location;
 import core.patterns.observer.Notifier;
 import core.patterns.observer.Observable;
@@ -16,15 +17,15 @@ import java.util.ArrayList;
  *
  * @author User
  */
-public class LocationStorage implements ObservableStorage<Location> {
+public class LocationStorage implements ObservableStorage<ILocation> {
 
     private static LocationStorage instance;
 
-    private ArrayList<Location> locations;
+    private ArrayList<ILocation> locations;
     private final Observable notifier;
-    private final DuplicateChecker<Location> duplicateChecker;
+    private final DuplicateChecker<ILocation> duplicateChecker;
 
-    private LocationStorage(Observable notifier, DuplicateChecker<Location> duplicateChecker) {
+    private LocationStorage(Observable notifier, DuplicateChecker<ILocation> duplicateChecker) {
         this.locations = new ArrayList<>();
         this.notifier = notifier;
         this.duplicateChecker = duplicateChecker;
@@ -43,8 +44,8 @@ public class LocationStorage implements ObservableStorage<Location> {
     }
     
     @Override
-    public boolean add(Location item) {
-        for (Location l : this.locations) {
+    public boolean add(ILocation item) {
+        for (ILocation l : this.locations) {
             if (duplicateChecker.isDuplicate(l, item)) {
                 return false;
             }
@@ -55,8 +56,8 @@ public class LocationStorage implements ObservableStorage<Location> {
     }
 
     @Override
-    public Location get(String id) {
-        for (Location location : this.locations) {
+    public ILocation get(String id) {
+        for (ILocation location : this.locations) {
             if (location.getAirportId().equals(id) ) {
                 return location;
             }
@@ -64,7 +65,7 @@ public class LocationStorage implements ObservableStorage<Location> {
         return null;
     }
 
-    public ArrayList<Location> getAll() {
+    public ArrayList<ILocation> getAll() {
         return this.locations;
     }
 }

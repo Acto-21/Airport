@@ -5,18 +5,15 @@
 package core.services.formatters;
 
 import core.models.Flight;
+import core.models.IFlight;
 import core.services.ArrivalCalculator;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author User
- */
-public class FlightFormatter implements Formatter<Flight>{
+public class FlightFormatter implements Formatter<IFlight> {
 
     @Override
-    public String[] format(Flight object) {
-        LocalDateTime arrivalDate = ArrivalCalculator.calculate(object);
+    public String[] format(IFlight object) {
+        LocalDateTime arrivalDate = ArrivalCalculator.calculate((Flight) object);
         return new String[] {
             object.getId(),
             object.getDepartureLocation().getAirportId(),
@@ -27,8 +24,6 @@ public class FlightFormatter implements Formatter<Flight>{
             object.getPlane().getId(),
             String.valueOf(object.getNumPassengers())
         };
-    }
-
-   
-    
+    }   
 }
+

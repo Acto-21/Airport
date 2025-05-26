@@ -4,7 +4,7 @@
  */
 package core.services.orderer;
 
-import core.models.Location;
+import core.models.ILocation;
 import java.util.ArrayList;
 
 /**
@@ -13,11 +13,11 @@ import java.util.ArrayList;
  */
 public class LocationOrderer {
 
-    public static ArrayList<Location> order(ArrayList<Location> originalList) {
-        ArrayList<Location> copiaList = new ArrayList<>();
+    public static ArrayList<ILocation> order(ArrayList<ILocation> originalList) {
+        ArrayList<ILocation> copiaList = new ArrayList<>();
 
-        for (Location location : originalList) {
-            Location copia = location.clone();
+        for (ILocation location : originalList) {
+            ILocation copia = location.clone();
             boolean inserted = false;
 
             for (int i = 0; i < copiaList.size(); i++) {

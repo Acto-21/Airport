@@ -4,27 +4,27 @@
  */
 package core.models.storage;
 
-import core.models.Passenger;
 import core.patterns.observer.Notifier;
+import core.models.IPassenger;
 import core.patterns.observer.Observable;
 import core.patterns.observer.Observer;
 import core.services.duplicateChecker.DuplicateChecker;
 import core.services.duplicateChecker.PassengerDuplicateChecker;
 import java.util.ArrayList;
 
+
 /**
  *
  * @author User
  */
-public class PassengerStorage implements UpdatableStorage<Passenger>, ObservableStorage<Passenger> {
+public class PassengerStorage implements UpdatableStorage<IPassenger>, ObservableStorage<IPassenger> {
 
     private static PassengerStorage instance;
-
-    private ArrayList<Passenger> passengers;
+    private ArrayList<IPassenger> passengers;
     private final Observable notifier;
-    private final DuplicateChecker<Passenger> duplicateChecker;
+    private final DuplicateChecker<IPassenger> duplicateChecker;
 
-    private PassengerStorage(Observable notifier, DuplicateChecker<Passenger> duplicateChecker) {
+    private PassengerStorage(Observable notifier, DuplicateChecker<IPassenger> duplicateChecker) {
         this.passengers = new ArrayList<>();
         this.notifier = notifier;
         this.duplicateChecker = duplicateChecker;
@@ -43,8 +43,8 @@ public class PassengerStorage implements UpdatableStorage<Passenger>, Observable
     }
 
     @Override
-    public boolean add(Passenger item) {
-        for (Passenger p : this.passengers) {
+    public boolean add(IPassenger item) {
+        for (IPassenger p : this.passengers) {
             if (duplicateChecker.isDuplicate(p, item)) {
                 return false;
             }
@@ -55,9 +55,9 @@ public class PassengerStorage implements UpdatableStorage<Passenger>, Observable
     }
 
     @Override
-    public boolean update(Passenger item) {
+    public boolean update(IPassenger item) {
         for (int i = 0; i < this.passengers.size(); i++) {
-            if (this.passengers.get(i).getId() == item.getId()) {
+            if (duplicateChecker.isDuplicate(this.passengers.get(i), item)) {
                 this.passengers.set(i, item);
                 notifier.notifyAllObservers(2);
                 return true;
@@ -67,18 +67,19 @@ public class PassengerStorage implements UpdatableStorage<Passenger>, Observable
     }
 
     @Override
-    public Passenger get(String id) {
-        Long idLong = Long.parseLong(id);
-        for (Passenger passenger : this.passengers) {
-            if (passenger.getId() == idLong) {
+    public IPassenger get(String id) {
+        Long idString = Long.parseLong(id);
+        for (IPassenger passenger : this.passengers) {
+            if (passenger.getId() == idString) {
                 return passenger;
             }
         }
         return null;
     }
 
-    public ArrayList<Passenger> getAll() {
+    public ArrayList<IPassenger> getAll() {
         return this.passengers;
     }
-
 }
+
+

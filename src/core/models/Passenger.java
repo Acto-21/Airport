@@ -8,12 +8,13 @@ import core.patterns.prototype.Prototype;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author edangulo
  */
-public class Passenger implements Prototype<Passenger> {
+public class Passenger implements Prototype<Passenger>, IPassenger{
 
     private final long id;
     private String firstname;
@@ -22,7 +23,7 @@ public class Passenger implements Prototype<Passenger> {
     private int countryPhoneCode;
     private long phone;
     private String country;
-    private ArrayList<Flight> flights;
+    private ArrayList<IFlight> flights;
 
     public Passenger(long id, String firstname, String lastname, LocalDate birthDate, int countryPhoneCode, long phone, String country) {
         this.id = id;
@@ -35,10 +36,8 @@ public class Passenger implements Prototype<Passenger> {
         this.flights = new ArrayList<>();
     }
 
-    public void addFlight(Flight flight) {
-        this.flights.add(flight);
-    }
-
+    
+    @Override
     public long getId() {
         return id;
     }
@@ -67,7 +66,8 @@ public class Passenger implements Prototype<Passenger> {
         return country;
     }
 
-    public ArrayList<Flight> getFlights() {
+    @Override
+    public List<IFlight> getFlights() {
         return flights;
     }
 
@@ -103,7 +103,7 @@ public class Passenger implements Prototype<Passenger> {
         return flights.size();
     }
 
-    public void setFlights(ArrayList<Flight> flights) {
+    public void setFlights(ArrayList<IFlight> flights) {
         this.flights = flights;
     }
 

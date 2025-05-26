@@ -6,19 +6,20 @@ package core.models;
 
 import core.patterns.prototype.Prototype;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author edangulo
  */
-public class Plane implements Prototype<Plane>{
-    
+public class Plane implements Prototype<Plane>, IPlane {
+
     private final String id;
     private String brand;
     private String model;
     private final int maxCapacity;
     private String airline;
-    private ArrayList<Flight> flights;
+    private List<IFlight> flights;
 
     public Plane(String id, String brand, String model, int maxCapacity, String airline) {
         this.id = id;
@@ -29,51 +30,55 @@ public class Plane implements Prototype<Plane>{
         this.flights = new ArrayList<>();
     }
 
-    public void addFlight(Flight flight) {
+    @Override
+    public void addFlight(IFlight flight) {
         this.flights.add(flight);
     }
-    
+
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getBrand() {
         return brand;
     }
 
+    @Override
     public String getModel() {
         return model;
     }
 
+    @Override
     public int getMaxCapacity() {
         return maxCapacity;
     }
 
+    @Override
     public String getAirline() {
         return airline;
     }
 
-    public ArrayList<Flight> getFlights() {
+    @Override
+    public List<IFlight> getFlights() {
         return flights;
     }
-    
-    public void setFlights(ArrayList<Flight> flights) {
+
+    @Override
+    public void setFlights(List<IFlight> flights) {
         this.flights = flights;
     }
-    
+
+    @Override
     public int getNumFlights() {
         return flights.size();
     }
 
-    
-    
     @Override
-    public Plane clone(){
-        
-        Plane copy = new Plane(this.id,this.brand,this.model,this.maxCapacity,this.airline);
+    public Plane clone() {
+        Plane copy = new Plane(this.id, this.brand, this.model, this.maxCapacity, this.airline);
         copy.setFlights(this.flights);
-        
         return copy;
-
     }
 }

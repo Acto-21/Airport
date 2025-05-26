@@ -4,16 +4,16 @@
  */
 package core.services.duplicateChecker;
 
-import core.models.Location;
+import core.models.ILocation;
 
 /**
  *
  * @author User
  */
-public class LocationDuplicateChecker implements DuplicateChecker<Location>{
+public class LocationDuplicateChecker implements DuplicateChecker<ILocation>{
 
     @Override
-    public boolean isDuplicate(Location existing, Location candidate) {
+    public boolean isDuplicate(ILocation existing, ILocation candidate) {
         return existing.getAirportId().equals(candidate.getAirportId());
     }
     
