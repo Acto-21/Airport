@@ -10,16 +10,22 @@ import core.models.Passenger;
  *
  * @author User
  */
-public class UserManager extends Observable{
+public class UserManager{
     
     private static UserManager instance;
     private Passenger currentUser;
     public static final int USER_CHANGED = 3;
+    private final Notifier notifier;
 
     private UserManager() {
         this.currentUser = null;
+        this.notifier = new Notifier();
     }
-
+    
+    public boolean addObserver(Observer observer) {
+        return notifier.addObserver(observer);
+    }
+    
     public static UserManager getInstance() {
         if (instance == null) {
             instance = new UserManager();
@@ -29,7 +35,7 @@ public class UserManager extends Observable{
     
     public void setCurrentUser(Passenger user) {
         this.currentUser = user;
-        notifyAll(USER_CHANGED); //Notifica el cambio de usuario
+        notifier.notifyAllObservers(USER_CHANGED); //Notifica el cambio de usuario
     }
 
     public Passenger getCurrentUser() {

@@ -105,9 +105,11 @@ public class AirportFrame extends javax.swing.JFrame {
         if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
         }
+        /*
         for (Passenger p : (ArrayList<Passenger>) response.getObject()) {
             this.userSelect.addItem(String.valueOf(p.getId()));
         }
+        */
         response = LocationController.getAllLocations();
         if (response.getStatus() >= 400) {
             JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);

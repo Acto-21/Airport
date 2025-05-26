@@ -1,4 +1,4 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import core.models.storage.reader.LineFileReader;
 import core.models.storage.reader.Reader;
 import core.services.FlightCoordinator;
-import core.services.FlightOrderer;
+import core.services.orderer.FlightOrderer;
 import core.services.formatters.FlightFormatter;
 import java.util.ArrayList;
 

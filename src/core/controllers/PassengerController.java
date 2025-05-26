@@ -14,7 +14,7 @@ import core.models.storage.loaders.PassengerJsonLoader;
 import core.models.storage.reader.LineFileReader;
 import core.models.storage.reader.Reader;
 import core.patterns.observer.UserManager;
-import core.services.PassengerOrder;
+import core.services.orderer.PassengerOrder;
 import core.services.PassengerManager;
 import core.services.formatters.PassengerFlightFormatter;
 import core.services.formatters.PassengerFormatter;

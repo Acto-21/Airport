@@ -35,6 +35,7 @@ public class PassengerComboBoxObserver extends Observer {
             } else {
                 comboBox1.addItem("Select User");
                 for (Passenger p : (ArrayList<Passenger>) response.getObject()) {
+                    System.out.println("" + p.getId());
                     comboBox1.addItem("" +p.getId());
                 }
             }

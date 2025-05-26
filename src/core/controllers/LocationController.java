@@ -11,7 +11,7 @@ import core.models.storage.LocationStorage;
 import core.models.storage.loaders.LocationJsonLoader;
 import core.models.storage.reader.LineFileReader;
 import core.models.storage.reader.Reader;
-import core.services.LocationOrderer;
+import core.services.orderer.LocationOrderer;
 import core.services.formatters.LocationFormatter;
 import java.util.ArrayList;
 
