@@ -4,13 +4,11 @@
  */
 package core.models;
 
-import core.patterns.prototype.Prototype;
-
 /**
  *
  * @author edangulo
  */
-public class Location implements Prototype<ILocation>, ILocation {
+public class Location implements ILocation {
     
     private final String airportId;
     private String airportName;
@@ -60,8 +58,8 @@ public class Location implements Prototype<ILocation>, ILocation {
     
 
     @Override
-    public Location clone(){
-        Location copy = new Location(this.airportId,this.airportName,this.airportCity,this.airportCountry,this.airportLatitude,this.airportLongitude);
+    public ILocation clone(){
+        ILocation copy = new Location(this.airportId,this.airportName,this.airportCity,this.airportCountry,this.airportLatitude,this.airportLongitude);
         return copy;
     }
     

@@ -4,6 +4,7 @@
  */
 package core.models;
 
+import core.patterns.prototype.Prototype;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author joelp
  */
-public interface IFlight {
+public interface IFlight extends Prototype<IFlight>{
     String getId();
     ILocation getDepartureLocation();
     ILocation getScaleLocation();
@@ -25,4 +26,9 @@ public interface IFlight {
     List<IPassenger> getPassengers();
     int getNumPassengers();
     LocalDateTime calculateArrivalDate();
+    
+    @Override
+    IFlight clone();
+
+    public void setPassengers(List<IPassenger> clonedPassengers);
 }

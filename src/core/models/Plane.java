@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author edangulo
  */
-public class Plane implements Prototype<Plane>, IPlane {
+public class Plane implements IPlane {
 
     private final String id;
     private String brand;
@@ -76,8 +76,8 @@ public class Plane implements Prototype<Plane>, IPlane {
     }
 
     @Override
-    public Plane clone() {
-        Plane copy = new Plane(this.id, this.brand, this.model, this.maxCapacity, this.airline);
+    public IPlane clone() {
+        IPlane copy = new Plane(this.id, this.brand, this.model, this.maxCapacity, this.airline);
         copy.setFlights(this.flights);
         return copy;
     }

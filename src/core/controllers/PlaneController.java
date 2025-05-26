@@ -6,6 +6,7 @@ package core.controllers;
 
 import core.controllers.utils.Response;
 import core.controllers.utils.Status;
+import core.models.IPlane;
 import core.models.Plane;
 import core.models.storage.PlaneStorage;
 import core.models.storage.loaders.PlaneJsonLoader;
@@ -36,10 +37,10 @@ public class PlaneController {
     
     public static Response getAllPlanes() {
         
-        ArrayList<Plane> copiaList = new ArrayList<>();
+        ArrayList<IPlane> copiaList = new ArrayList<>();
         
         try {
-            ArrayList<Plane> originalList = PlaneStorage.getInstance().getAll();
+            ArrayList<IPlane> originalList = PlaneStorage.getInstance().getAll();
             copiaList = PlaneOrderer.orderPlanes(originalList);
         } catch (Exception e) {
             return new Response("Error cloning planes: ", Status.INTERNAL_SERVER_ERROR, new ArrayList<>());

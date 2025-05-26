@@ -239,8 +239,8 @@ public class AirportFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        panelRound1 = new airport.PanelRound();
-        panelRound2 = new airport.PanelRound();
+        panelRound1 = new core.views.PanelRound();
+        panelRound2 = new core.views.PanelRound();
         jButton13 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -376,8 +376,8 @@ public class AirportFrame extends javax.swing.JFrame {
         iDFlightSelect = new javax.swing.JComboBox<>();
         jLabel48 = new javax.swing.JLabel();
         jComboBox8 = new javax.swing.JComboBox<>();
-        jButton7 = new javax.swing.JButton();
-        panelRound3 = new airport.PanelRound();
+        delayFlight = new javax.swing.JButton();
+        panelRound3 = new core.views.PanelRound();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -1469,11 +1469,11 @@ public class AirportFrame extends javax.swing.JFrame {
         jComboBox8.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
         jComboBox8.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Minute" }));
 
-        jButton7.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
-        jButton7.setText("Delay");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        delayFlight.setFont(new java.awt.Font("Yu Gothic UI", 0, 18)); // NOI18N
+        delayFlight.setText("Delay");
+        delayFlight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                delayFlightActionPerformed(evt);
             }
         });
 
@@ -1499,7 +1499,7 @@ public class AirportFrame extends javax.swing.JFrame {
                 .addGap(820, 820, 820))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7)
+                .addComponent(delayFlight)
                 .addGap(531, 531, 531))
         );
         jPanel12Layout.setVerticalGroup(
@@ -1518,7 +1518,7 @@ public class AirportFrame extends javax.swing.JFrame {
                     .addComponent(jLabel48)
                     .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
-                .addComponent(jButton7)
+                .addComponent(delayFlight)
                 .addGap(33, 33, 33))
         );
 
@@ -1755,7 +1755,7 @@ public class AirportFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_addToFlightPassengerActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void delayFlightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayFlightActionPerformed
         // TODO add your handling code here:
         String flightId = iDFlightSelect.getItemAt(iDFlightSelect.getSelectedIndex());
         String hours = jComboBox6.getItemAt(jComboBox6.getSelectedIndex());
@@ -1773,7 +1773,7 @@ public class AirportFrame extends javax.swing.JFrame {
             jComboBox6.setSelectedIndex(0);  // horas de retraso
             jComboBox8.setSelectedIndex(0);  // minutos de retraso 
         }
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_delayFlightActionPerformed
 
     private void refreshPassengerFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshPassengerFlightsActionPerformed
         // TODO add your handling code here:
@@ -1941,12 +1941,12 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JTextField airportlongitudetext;
     private javax.swing.JTextField airportnametext;
     private javax.swing.JComboBox<String> arrivalLocationSelect;
+    private javax.swing.JButton delayFlight;
     private javax.swing.JComboBox<String> departureLocationSelect;
     private javax.swing.JComboBox<String> flightSelect;
     private javax.swing.JTextField flightidtext;
     private javax.swing.JComboBox<String> iDFlightSelect;
     private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox8;
     private javax.swing.JLabel jLabel1;
@@ -2042,9 +2042,9 @@ public class AirportFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
-    private airport.PanelRound panelRound1;
-    private airport.PanelRound panelRound2;
-    private airport.PanelRound panelRound3;
+    private core.views.PanelRound panelRound1;
+    private core.views.PanelRound panelRound2;
+    private core.views.PanelRound panelRound3;
     private javax.swing.JComboBox<String> planeSelect;
     private javax.swing.JButton refreshFlights;
     private javax.swing.JButton refreshLocations;

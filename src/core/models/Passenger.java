@@ -4,9 +4,7 @@
  */
 package core.models;
 
-import core.patterns.prototype.Prototype;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,7 @@ import java.util.List;
  *
  * @author edangulo
  */
-public class Passenger implements Prototype<Passenger>, IPassenger{
+public class Passenger implements IPassenger{
 
     private final long id;
     private String firstname;
@@ -42,10 +40,12 @@ public class Passenger implements Prototype<Passenger>, IPassenger{
         return id;
     }
 
+    @Override
     public String getFirstname() {
         return firstname;
     }
 
+    @Override
     public String getLastname() {
         return lastname;
     }
@@ -103,13 +103,14 @@ public class Passenger implements Prototype<Passenger>, IPassenger{
         return flights.size();
     }
 
+    @Override
     public void setFlights(ArrayList<IFlight> flights) {
         this.flights = flights;
     }
 
     @Override
-    public Passenger clone() {
-        Passenger copy = new Passenger(this.id, this.firstname, this.lastname, this.birthDate, this.countryPhoneCode, this.phone, this.country);
+    public IPassenger clone() {
+        IPassenger copy = new Passenger(this.id, this.firstname, this.lastname, this.birthDate, this.countryPhoneCode, this.phone, this.country);
         copy.setFlights(this.flights);
         return copy;
     }

@@ -4,16 +4,15 @@
  */
 package core.models;
 
+import core.patterns.prototype.Prototype;
 import java.util.List;
 
 /**
  *
  * @author joelp
  */
-public interface IPlane {
+public interface IPlane extends Prototype<IPlane> {
     void addFlight(IFlight flight);
-    IPlane clone();
-    
     String getId();
     String getBrand();
     String getModel();
@@ -22,4 +21,6 @@ public interface IPlane {
     List<IFlight> getFlights();
     void setFlights(List<IFlight> flights);
     int getNumFlights();
+    @Override
+    IPlane clone();
 }

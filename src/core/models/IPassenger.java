@@ -4,13 +4,15 @@
  */
 package core.models;
 
+import core.patterns.prototype.Prototype;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author joelp
  */
-public interface IPassenger {
+public interface IPassenger extends Prototype<IPassenger>{
 
     long getId();
 
@@ -19,5 +21,10 @@ public interface IPassenger {
     String getLastname();
 
     List<IFlight> getFlights();
+    
+    @Override
+    IPassenger clone();
+
+    public void setFlights(ArrayList<IFlight> flights);
 
 }

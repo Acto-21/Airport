@@ -4,6 +4,7 @@
  */
 package core.services.orderer;
 
+import core.models.IPlane;
 import core.models.Plane;
 import java.util.ArrayList;
 
@@ -13,11 +14,11 @@ import java.util.ArrayList;
  */
 public class PlaneOrderer {
     
-    public static ArrayList<Plane> orderPlanes(ArrayList<Plane> originalList) {
-    ArrayList<Plane> copiaList = new ArrayList<>();
+    public static ArrayList<IPlane> orderPlanes(ArrayList<IPlane> originalList) {
+    ArrayList<IPlane> copiaList = new ArrayList<>();
 
-    for (Plane plane : originalList) {
-        Plane copia = plane.clone();
+    for (IPlane plane : originalList) {
+        IPlane copia = plane.clone();
         boolean inserted = false;
 
         for (int i = 0; i < copiaList.size(); i++) {

@@ -4,10 +4,8 @@
  */
 package core.services.orderer;
 
-import core.models.Flight;
 import core.models.IFlight;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author edangulo
  */
-public class Flight implements IFlight, Prototype<Flight> {
+public class Flight implements IFlight {
 
     private final String id;
     private List<IPassenger> passengers;
@@ -134,8 +134,8 @@ public class Flight implements IFlight, Prototype<Flight> {
     }
 
     @Override
-    public Flight clone() {
-        Flight copy;
+    public IFlight clone() {
+        IFlight copy;
         if (this.scaleLocation != null) {
             copy = new Flight(
                     this.id,
@@ -163,7 +163,7 @@ public class Flight implements IFlight, Prototype<Flight> {
 
         List<IPassenger> clonedPassengers = new ArrayList<>();
         for (IPassenger p : this.passengers) {
-            clonedPassengers.add(p); // idealmente: p.clone()
+            clonedPassengers.add(p); 
         }
         copy.setPassengers(clonedPassengers);
 

@@ -4,25 +4,23 @@
  */
 package core.models;
 
+import core.patterns.prototype.Prototype;
+
 /**
  *
  * @author joelp
  */
 
-public interface ILocation {
+public interface ILocation extends Prototype<ILocation>{
 
     String getAirportId(); 
-
     String getAirportName();
-
     String getAirportCity();
-
     String getAirportCountry();
-
     double getAirportLatitude();
-
     double getAirportLongitude();
 
+    @Override
     ILocation clone();
 }
 

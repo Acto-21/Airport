@@ -4,16 +4,16 @@
  */
 package core.services.duplicateChecker;
 
-import core.models.Plane;
+import core.models.IPlane;
 
 /**
  *
  * @author User
  */
-public class PlaneDuplicateChecker implements DuplicateChecker<Plane>{
+public class PlaneDuplicateChecker implements DuplicateChecker<IPlane>{
 
     @Override
-    public boolean isDuplicate(Plane existing, Plane candidate) {
+    public boolean isDuplicate(IPlane existing, IPlane candidate) {
         return existing.getId().equals(candidate.getId());
     }
     

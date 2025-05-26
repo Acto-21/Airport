@@ -4,6 +4,7 @@
  */
 package core.models.storage;
 
+import core.models.IPlane;
 import core.models.Plane;
 import core.patterns.observer.Notifier;
 import core.patterns.observer.Observable;
@@ -16,15 +17,15 @@ import java.util.ArrayList;
  *
  * @author User
  */
-public class PlaneStorage implements ObservableStorage<Plane> {
+public class PlaneStorage implements ObservableStorage<IPlane> {
 
     private static PlaneStorage instance;
 
-    private ArrayList<Plane> planes;
+    private ArrayList<IPlane> planes;
     private final Observable notifier;
-    private final DuplicateChecker<Plane> duplicateChecker;
+    private final DuplicateChecker<IPlane> duplicateChecker;
     
-    private PlaneStorage(Observable notifier, DuplicateChecker<Plane> duplicateChecker) {
+    private PlaneStorage(Observable notifier, DuplicateChecker<IPlane> duplicateChecker) {
         this.planes = new ArrayList<>();
         this.notifier = notifier;
         this.duplicateChecker = duplicateChecker;
@@ -43,8 +44,8 @@ public class PlaneStorage implements ObservableStorage<Plane> {
     }
 
     @Override
-    public boolean add(Plane item) {
-        for (Plane p : this.planes) {
+    public boolean add(IPlane item) {
+        for (IPlane p : this.planes) {
             if (duplicateChecker.isDuplicate(p,item)) {
                 return false;
             }
@@ -55,8 +56,8 @@ public class PlaneStorage implements ObservableStorage<Plane> {
     }
 
     @Override
-    public Plane get(String id) {
-        for (Plane plane : this.planes) {
+    public IPlane get(String id) {
+        for (IPlane plane : this.planes) {
             if (plane.getId().equals(id)) {
                 return plane;
             }
@@ -64,7 +65,7 @@ public class PlaneStorage implements ObservableStorage<Plane> {
         return null;
     }
 
-    public ArrayList<Plane> getAll() {
+    public ArrayList<IPlane> getAll() {
         return this.planes;
     }
 }
